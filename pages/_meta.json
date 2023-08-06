@@ -1,6 +1,5 @@
 {
   "index": "Introduction",
-  "another": "Another Page",
   "about": {
     "title": "About",
     "type": "page"
@@ -8,7 +7,7 @@
   "contact": {
     "title": "Contact ↗",
     "type": "page",
-    "href": "https://twitter.com/shuding_",
+    "href": "https://github.com/milkdrinkers/milkdrinkers.github.io",
     "newWindow": true
   }
 }

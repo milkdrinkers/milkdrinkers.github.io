@@ -9,7 +9,7 @@ const config: DocsThemeConfig = {
   chat: {
     link: 'https://discord.athyrium.eu',
   },
-  docsRepositoryBase: 'https://github.com/milkdrinkers/nextra-docs-template',
+  docsRepositoryBase: 'https://github.com/milkdrinkers/milkdrinkers.github.io',
   footer: {
     text: 'Milkdrinkers',
   },
