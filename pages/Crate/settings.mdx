@@ -1,0 +1,64 @@
+import { Callout, Tabs, Tab } from 'nextra/components'
+
+# File Settings
+
+## [Settings](https://javadoc.jitpack.io/com/github/milkdrinkers/crate/latest/javadoc/com/github/milkdrinkers/Crate/internal/settings/package-summary.html)
+
+Crate File instances have multiple settings. Here they are explained in finer detail.
+
+### DataType
+
+#### DataType.UNSORTED
+
+<Callout type="info">
+This is the default value if `ConfigSetting` is `SKIP_COMMENTS`
+</Callout>
+
+Is unsorted, using less RAM. Meaning, when writing back to the File it might mess up the arrangement and the sequence (it wont make the file unreadable, just the Style might be messed up and comments shifted around).
+This type is best suited for read-only files or when storing data.
+
+#### DataType.SORTED
+
+<Callout type="info">
+This is the default value if `ConfigSetting` is `PRESERVE_COMMENTS`
+</Callout>
+
+Is internally sorted, using more RAM. When writing back to the File, entry sequence is preserved.
+This type is best suited for files that are written to by the program that also need to keep their internal structure. (Like a config file with comments.)
+
+---
+
+### ReloadSetting
+
+#### ReloadSetting.INTELLIGENT
+
+<Callout type="info">
+This is the default value
+</Callout>
+
+The FileData will only be reloaded when the FileContents have changed since the last access.
+
+#### ReloadSetting.AUTOMATIC
+
+The FileData will be reloaded everytime you access the File.
+
+#### ReloadSetting.MANUAL
+
+The FileData will only be reloaded, when you call the `forceReload()` method.
+
+---
+
+### ConfigSetting
+
+#### ConfigSetting.SKIP_COMMENTS
+
+<Callout type="info">
+This is the default value
+</Callout>
+
+Any comments will be stripped.
+
+#### ConfigSetting.PRESERVE_COMMENTS
+
+Any comments will be preserved.
+

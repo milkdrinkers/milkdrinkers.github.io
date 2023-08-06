@@ -1,5 +1,8 @@
 {
+  "introduction": "Introduction",
   "installation": "Installation",
   "file_formats": "File Formats",
-  "basic_usage": "Basic Usage"
+  "settings": "File Settings",
+  "basic_usage": "Basic Usage",
+  "advanced": "Advanced Usage"
 }

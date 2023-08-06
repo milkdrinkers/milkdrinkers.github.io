@@ -23,12 +23,13 @@ Json json = new Json("filename3", "Path");
 Toml toml = new Toml("filename4", "Path");
 
 // Or use the builder
-Config configUsingBuilder = CrateBuilder
-    .fromFile(FILE-HERE)
+Yaml configUsingBuilder = CrateBuilder
+    .fromPath("examplefile.yml")
     .addInputStreamFromResource() // Optional if you want to generate a default config from file
-    .setDataType()
-    .setReloadSettings()
-    .createConfig();
+    .setDataType(DataType.SORTED)
+    .setReloadSetting(ReloadSetting.INTELLIGENT)
+    .setConfigSetting(ConfigSetting.PRESERVE_COMMENTS);
+    .createYaml()
 ```
 
 ## Getting Values
