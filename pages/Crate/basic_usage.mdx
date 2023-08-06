@@ -1,0 +1,114 @@
+
+# Basic Usage
+
+For simplicity this page will be using the FileType `Yaml`. All file formats have full parity so whichever you use is up to you.
+
+## Constructors
+
+Valid constructors are:
+```java
+new Yaml(FILE);
+new Yaml(NAME, PATH);
+new Yaml(FILETYPE); // Copy-constructor
+new Yaml(NAME, PATH, INPUTSTREAM);
+```
+
+## Creating Files
+
+```java
+// Create files by instantiating their respective class directly
+Yaml yaml = new Yaml("filename1", "Path");
+Config config = new Config("filename2", "Path"); //Special version of YAML
+Json json = new Json("filename3", "Path");
+Toml toml = new Toml("filename4", "Path");
+
+// Or use the builder
+Config configUsingBuilder = CrateBuilder
+    .fromFile(FILE-HERE)
+    .addInputStreamFromResource() // Optional if you want to generate a default config from file
+    .setDataType()
+    .setReloadSettings()
+    .createConfig();
+```
+
+## Getting Values
+
+Getting values from a file is vital. Crate provides a plethora of utility methods with sane defaults to help with this.
+
+```java
+// Basic Getters
+Object anObject = config.get("Key"); // Default: null
+String aString = config.getString("Key"); // Default: ""
+int anInt = config.getInt("Key"); // Default: 0
+double aDouble = config.getDouble("Key"); // Default: 0.0
+float aFloat = config.getFloat("Key"); // Default: 0.0
+long aLong = config.getLong("Key"); // Default: 0.0
+List<String> aStringList = config.getStringList("Key"); // Default: ArrayList<String>()
+TimeUnit anEnum = config.getEnum("Key", TimeUnit.class); //Throws an CrateValidation / IllegalStateException
+
+// Advanced Getters
+Optional<String> optionalString = config.find("Key", String.class); // If a key is not present an empty optional will be returned
+String getOrDefault = config.getOrDefault("Key", "Default-Value"); // Returns the value or Default-Value if Key does not exist
+String getOrSetDefault = config.getOrSetDefault("Key", "Default-Value"); // Will set and return value, if key does not yet exist in file
+```
+
+## Setting Values
+
+```java
+config.set("Key", "Value");
+config.setDefault("Key", "Default-Value"); // Will only set, if key does not yet exist in file
+```
+
+## Quality of Life
+
+### setDefault
+
+Sets the value only if the file does not contain the key.
+
+```java
+config.setDefault("Key", "Default-Value");
+```
+
+### getOrDefault
+
+Returns the value, or default-value if file does not contain the key.
+
+```java
+String getOrDefault = config.getOrDefault("Key", "Default-Value");
+```
+
+### getOrSetDefault
+
+Returns the value, or default-value if file does not contain the key. Also sets the value to default if the file does not contain the key.
+
+```java
+String getOrSetDefault = config.getOrSetDefault("Key", "Default-Value");
+```
+
+### setPathPrefix
+
+Sets a prefix for the key argument.
+
+Consider the following code:
+```java
+config.get("spawn.x");
+config.get("spawn.y");
+config.get("spawn.z");
+```
+
+Instead, one could do this:
+```java
+config.setPathPrefix("spawn");
+config.get("x");
+config.get("y");
+config.get("z");
+config.setPathPrefix(""); // Set prefix to empty as to not mess with other stuff accessing
+```
+
+## IO
+
+```java
+File file = config.getFile();
+String name = config.getName();
+config.clear();
+```

@@ -1,0 +1,135 @@
+import { Steps, Tab, Tabs } from 'nextra/components'
+
+# Installation
+
+## Adding Dependency
+
+In order to use Crate you will need to download it using a BuildTool like Maven or Gradle.
+
+<Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
+    <Tab>
+        <Steps>
+        ### Add Repository
+
+        ```kotlin
+        repositories {
+            maven("https://jitpack.io")
+        }
+        ```
+
+        ### Add Dependency
+
+        ```kotlin
+        dependencies {
+            implementation("com.github.milkdrinkers:crate:VERSION")
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```kotlin
+        plugins {
+            id 'com.github.johnrengelman.shadow' version '8.1.1'
+        }
+
+        tasks {
+            shadowJar {
+                relocate 'com.github.milkdrinkers.Crate', 'yourpackage.yourname.crate'
+            }
+        }
+        ```
+        </Steps>
+    </Tab>
+    <Tab>
+        <Steps>
+        ### Add Repository
+
+        ```groovy
+        repositories {
+            maven { url 'https://jitpack.io' }
+        }
+        ```
+
+        ### Add Dependency
+
+        ```groovy
+        dependencies {
+            implementation 'com.github.milkdrinkers:crate:VERSION'
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```groovy
+        plugins {
+            id("com.github.johnrengelman.shadow") version "8.1.1"
+        }
+
+        tasks {
+            shadowJar {
+                relocate("com.github.milkdrinkers.Crate", "yourpackage.yourname.crate")
+            }
+        }
+        ```
+        </Steps>
+    </Tab>
+    <Tab>
+        <Steps>
+        ### Add Repository
+
+        ```xml
+        <repositories>
+            <repository>
+                <id>jitpack.io</id>
+                <url>https://jitpack.io</url>
+            </repository>
+        </repositories>
+        ```
+
+        ### Add Dependency
+
+        ```xml
+        <dependency>
+            <groupId>com.github.milkdrinkers</groupId>
+            <artifactId>crate</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        ```
+
+        ### Shade Dependency
+
+        ```xml
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <createDependencyReducedPom>false</createDependencyReducedPom>
+                <relocations>
+                    <relocation>
+                        <pattern>com.github.milkdrinkers.Crate</pattern>
+                        <shadedPattern>yourpackage.yourname.crate</shadedPattern>
+                    </relocation>
+                </relocations>
+            </configuration>
+        </plugin>
+        ```
+        </Steps>
+    </Tab>
+</Tabs>
+
+## What now?
+
+Crate should now be available for use in your project.
+
+For further reading I strongly recommend:
+* [File Formats](./file_formats.mdx)
+* [Basic Usage](./basic_usage.mdx)
