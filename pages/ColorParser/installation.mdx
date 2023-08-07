@@ -4,9 +4,9 @@ import { Steps, Tab, Tabs } from 'nextra/components'
 
 ## Adding Dependency
 
-In order to use Crate you will need to download it using a BuildTool like Maven or Gradle.
+In order to use ColorParser you will need to download it using a BuildTool like Maven or Gradle.
 
-<Tabs items={['Gradle Kotlin', 'Gradle Groovy', 'Maven']}>
+<Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
     <Tab>
         <Steps>
         ### Add Repository
@@ -21,7 +21,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```kotlin
         dependencies {
-            implementation("com.github.milkdrinkers:crate:VERSION")
+            implementation("com.github.milkdrinkers:colorparser:VERSION")
         }
         ```
 
@@ -34,7 +34,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         tasks {
             shadowJar {
-                relocate 'com.github.milkdrinkers.Crate', 'yourpackage.yourname.crate'
+                relocate 'com.github.milkdrinkers.colorparser', 'yourpackage.yourname.colorparser'
             }
         }
         ```
@@ -54,7 +54,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```groovy
         dependencies {
-            implementation 'com.github.milkdrinkers:crate:VERSION'
+            implementation 'com.github.milkdrinkers:colorparser:VERSION'
         }
         ```
 
@@ -67,7 +67,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         tasks {
             shadowJar {
-                relocate("com.github.milkdrinkers.Crate", "yourpackage.yourname.crate")
+                relocate("com.github.milkdrinkers.colorparser", "yourpackage.yourname.colorparser")
             }
         }
         ```
@@ -91,7 +91,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         ```xml
         <dependency>
             <groupId>com.github.milkdrinkers</groupId>
-            <artifactId>crate</artifactId>
+            <artifactId>colorparser</artifactId>
             <version>VERSION</version>
         </dependency>
         ```
@@ -115,8 +115,8 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
                 <createDependencyReducedPom>false</createDependencyReducedPom>
                 <relocations>
                     <relocation>
-                        <pattern>com.github.milkdrinkers.Crate</pattern>
-                        <shadedPattern>yourpackage.yourname.crate</shadedPattern>
+                        <pattern>com.github.milkdrinkers.colorparser</pattern>
+                        <shadedPattern>yourpackage.yourname.colorparser</shadedPattern>
                     </relocation>
                 </relocations>
             </configuration>
@@ -126,10 +126,53 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
     </Tab>
 </Tabs>
 
-## What now?
+## Platforms Other Than PaperMC
 
-Crate should now be available for use in your project.
+If using Spigot (*or any other platform that doesn't natively ship Adventure*), then you will need to add Adventure as a dependency in your project.
 
-For further reading I strongly recommend:
-* [File Formats](./file_formats.mdx)
-* [Basic Usage](./basic_usage.mdx)
+Check supported platforms [here](https://docs.advntr.dev/platform/native.html). And versions [here](https://github.com/KyoriPowered/adventure/releases).
+
+<Tabs items={['Gradle Kotlin', 'Gradle Groovy', 'Maven']}>
+    <Tab>
+        <Steps>
+        ### Add Dependency
+
+        ```kotlin
+        dependencies {
+            implementation("net.kyori:adventure-api:VERSION")
+            implementation("net.kyori:adventure-text-minimessage:VERSION")
+        }
+        ```
+        </Steps>
+    </Tab>
+    <Tab>
+        <Steps>
+        ### Add Dependency
+
+        ```groovy
+        dependencies {
+            implementation "net.kyori:adventure-api:VERSION"
+            implementation "net.kyori:adventure-text-minimessage:VERSION"
+        }
+        ```
+        </Steps>
+    </Tab>
+    <Tab>
+        <Steps>
+        ### Add Dependency
+
+        ```xml
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        ```
+        </Steps>
+    </Tab>
+</Tabs>
