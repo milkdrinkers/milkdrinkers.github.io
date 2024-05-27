@@ -29,12 +29,12 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```kotlin
         plugins {
-            id 'com.github.johnrengelman.shadow' version '8.1.1'
+            id("com.github.johnrengelman.shadow") version "8.1.1"
         }
 
         tasks {
             shadowJar {
-                relocate 'com.github.milkdrinkers.colorparser', 'yourpackage.yourname.colorparser'
+                relocate("com.github.milkdrinkers.colorparser", "yourpackage.yourname.colorparser")
             }
         }
         ```
@@ -62,12 +62,12 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```groovy
         plugins {
-            id("com.github.johnrengelman.shadow") version "8.1.1"
+            id 'com.github.johnrengelman.shadow' version '8.1.1'
         }
 
         tasks {
             shadowJar {
-                relocate("com.github.milkdrinkers.colorparser", "yourpackage.yourname.colorparser")
+                relocate 'com.github.milkdrinkers.colorparser', 'yourpackage.yourname.colorparser'
             }
         }
         ```
