@@ -1,16 +1,16 @@
-import { Callout, Steps, Tab, Tabs } from 'nextra/components'
+import { Callout, Steps, Tabs } from 'nextra/components'
 
 # File Formats
 
 Crate provides support for three file formats: `Yaml`, `Json` and `Toml`. Whichever one you want to use, and when, should be based on your needs & requirements.
 
 <Tabs items={['Config', 'Yaml', 'Json', 'Toml']}>
-    <Tab>
+    <Tabs.Tab>
         ## Config
 
         The config format in Crate is just an extension of Yaml with specific File Settings by default.
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         ## Yaml
 
         **Pros**
@@ -26,8 +26,8 @@ Crate provides support for three file formats: `Yaml`, `Json` and `Toml`. Whiche
         <Callout type="info">
         We recommend using Crate's `Config` format over `Yaml` for configuration files.
         </Callout>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         ## Json
 
         **Pros**
@@ -38,8 +38,8 @@ Crate provides support for three file formats: `Yaml`, `Json` and `Toml`. Whiche
         **Cons**
 
         * Readability
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         ## Toml
 
         **Pros**
@@ -49,7 +49,7 @@ Crate provides support for three file formats: `Yaml`, `Json` and `Toml`. Whiche
         **Cons**
 
         * Not as common as Yaml & Json
-    </Tab>
+    </Tabs.Tab>
 </Tabs>
 
 

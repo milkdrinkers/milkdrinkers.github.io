@@ -1,4 +1,4 @@
-import { Steps, Tab, Tabs } from 'nextra/components'
+import { Steps, Tabs } from 'nextra/components'
 
 # Installation
 
@@ -7,7 +7,7 @@ import { Steps, Tab, Tabs } from 'nextra/components'
 In order to use ColorParser you will need to download it using a BuildTool like Maven or Gradle.
 
 <Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
-    <Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -39,8 +39,8 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -72,8 +72,8 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -123,7 +123,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         </plugin>
         ```
         </Steps>
-    </Tab>
+    </Tabs.Tab>
 </Tabs>
 
 ## Platforms Other Than PaperMC
@@ -133,7 +133,7 @@ If using Spigot (*or any other platform that doesn't natively ship Adventure*), 
 Check supported platforms [here](https://docs.advntr.dev/platform/native.html). And versions [here](https://github.com/KyoriPowered/adventure/releases).
 
 <Tabs items={['Gradle Kotlin', 'Gradle Groovy', 'Maven']}>
-    <Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Dependency
 
@@ -144,8 +144,8 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Dependency
 
@@ -156,8 +156,8 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Dependency
 
@@ -174,5 +174,5 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         </dependency>
         ```
         </Steps>
-    </Tab>
+    </Tabs.Tab>
 </Tabs>

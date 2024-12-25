@@ -1,4 +1,4 @@
-import { Tabs, Tab } from 'nextra/components'
+import { Tabs } from 'nextra/components'
 
 # Advanced Usage
 
@@ -11,7 +11,7 @@ Crate is designed to provide the best performance possible. In normal use-cases,
 The library also provides some methods to further increase performance if needed.
 
 <Tabs items={['Mass Setting Values', 'Mass Removing Values']}>
-    <Tab>
+    <Tabs.Tab>
         ### Mass Setting Values
 
         Consider the following code:
@@ -35,8 +35,8 @@ The library also provides some methods to further increase performance if needed
         ```
 
         > This is good for performance since the file will only be written to once.
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         ### Mass Removing Values
 
         Consider the following code:
@@ -58,7 +58,7 @@ The library also provides some methods to further increase performance if needed
         ```
 
         > This is good for performance since the file will only be written to once.
-    </Tab>
+    </Tabs.Tab>
 </Tabs>
 
 ## Serializing/Deserializing Objects Into/From Files

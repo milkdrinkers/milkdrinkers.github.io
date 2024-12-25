@@ -4,14 +4,9 @@ import { useRouter } from 'next/router';
 
 const config: DocsThemeConfig = {
   logo: (
-    <div style={{
-      paddingLeft: '50px',
-      lineHeight: '38px',
-      background: "url('https://avatars.githubusercontent.com/u/94123521?s=38') no-repeat left",
-      backgroundSize: '38px',
-      fontWeight: 550,
-    }}>
-      Milkdrinkers
+    <div className="flex flex-row items-center">
+      <img src='https://avatars.githubusercontent.com/u/94123521?s=38' alt='Logo' width='30' />
+      <span className='ml-2 text-xl font-black'>Milkdrinkers</span>
     </div>
   ),
   project: {
@@ -20,37 +15,47 @@ const config: DocsThemeConfig = {
   chat: {
     link: 'https://discord.athyrium.eu',
   },
+  sidebar: {
+    toggleButton: true
+  },
   docsRepositoryBase: 'https://github.com/milkdrinkers/milkdrinkers.github.io/blob/main',
   footer: {
-    text: 'Milkdrinkers',
+    component: () => {
+      return (
+        <>
+        </>
+      )
+    }
   },
   head: () => {
     const { asPath } = useRouter();
-    const { frontMatter, title } = useConfig();
-    const url = `https://milkdrinkers.github.io${asPath}`;
-    const description = frontMatter.description || "Documentation for all Milkdrinkers projects";
-
+    const { frontMatter } = useConfig();
+    
+    const title = frontMatter.title ? `${frontMatter.title} - Milkdrinkers Docs` : 'Milkdrinkers Docs';   
+    const description = frontMatter.description ?? "Documentation for all Milkdrinkers projects.";
+    
+    const baseUrl = process.env.NODE_ENV === 'production' ? 'https://milkdrinkers.github.io/' : 'http://localhost:3003';
+    const pageUrl = `${baseUrl}${asPath}`;
+    
     return (
       <>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/x-icon" href="/static/milk.ico" />
-        <meta httpEquiv="Content-Language" content="en" />
+        <title>{title}</title>
         <meta name="description" content={description} />
+        <meta name="robots" content="index,follow" />
+        <meta httpEquiv="Content-Language" content="en" />
+
+        <link rel="icon" href="/static/milk.ico" />
+        <link rel="icon" type="image/x-icon" href="/static/milk.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/milk.ico" />
+
         <meta name="og:title" content={title} />
         <meta name="og:description" content={description} />
-        <meta name="og:url" content={url} />
+        <meta name="og:url" content={pageUrl} />
+        <meta property="og:type" content="website" />
       </>
     );
   },
   darkMode: true,
-  useNextSeoProps: () => {
-    const { asPath } = useRouter()
-    if (asPath !== '/') {
-      return {
-        titleTemplate: '%s - Milkdrinkers'
-      }
-    }
-  }
 }
 
 export default config

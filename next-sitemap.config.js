@@ -3,5 +3,6 @@ module.exports = {
     siteUrl: 'https://milkdrinkers.github.io/',
     generateRobotsTxt: true,
     generateIndexSitemap: false,
-    outDir: './out'
+    outDir: './out',
+    exclude: ['/error/*']
 };

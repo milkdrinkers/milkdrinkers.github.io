@@ -1,4 +1,4 @@
-import { Steps, Tab, Tabs } from 'nextra/components'
+import { Steps, Tabs } from 'nextra/components'
 
 # Installation
 
@@ -7,7 +7,7 @@ import { Steps, Tab, Tabs } from 'nextra/components'
 In order to use Crate you will need to download it using a BuildTool like Maven or Gradle.
 
 <Tabs items={['Gradle Kotlin', 'Gradle Groovy', 'Maven']}>
-    <Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -39,8 +39,8 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -72,8 +72,8 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         }
         ```
         </Steps>
-    </Tab>
-    <Tab>
+    </Tabs.Tab>
+    <Tabs.Tab>
         <Steps>
         ### Add Repository
 
@@ -123,7 +123,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         </plugin>
         ```
         </Steps>
-    </Tab>
+    </Tabs.Tab>
 </Tabs>
 
 ## What now?
