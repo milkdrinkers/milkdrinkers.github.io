@@ -1,0 +1,25 @@
+@layer tailwind, nextra, milkdrinkers;
+@import "tailwindcss" layer(tailwind);
+@import 'nextra-theme-docs/dist/style.css' layer(nextra);
+
+@layer milkdrinkers {
+    :root {
+        --code-background-light: hsl(0, 0%, 100%);
+        --code-background-light-border: hsl(0, 0%, 95%);
+        --code-background-dark: hsl(210, 12%, 16%);
+        --code-background-dark-border: hsl(210, 12%, 16%);
+    }
+
+    .x\:ring-gray-300 {
+        --tw-ring-color: var(--code-background-light-border);
+    }
+    .x\:bg-white {
+        background-color: var(--code-background-light);
+    }
+    .dark .x\:dark\:ring-neutral-700 {
+        --tw-ring-color: var(--code-background-dark-border);
+    }
+    .dark .x\:dark\:bg-black {
+        background-color: var(--code-background-dark);
+    }
+}

@@ -12,18 +12,15 @@ const nextConfig = {
 }
 
 const withNextra = nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
   defaultShowCopyCode: true,
-  codeHighlight: true,
   mdxOptions: {
     rehypePrettyCodeOptions: {
       theme: {
-        dark: 'one-dark-pro',
-        light: 'one-light'
+        dark: 'monokai',
+        light: 'light-plus'
       }
     }
-  },
+  }
 });
 
 export default withNextra(nextConfig);
