@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next --turbopack",
-    "build": "next build && pagefind --site .next/server/app --output-path out/_pagefind",
-    "start": "next start"
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
   },
   "repository": {
     "type": "git",
