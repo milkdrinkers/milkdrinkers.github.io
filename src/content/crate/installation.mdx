@@ -13,7 +13,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```kotlin
         repositories {
-            maven("https://jitpack.io")
+            mavenCentral()
         }
         ```
 
@@ -21,7 +21,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```kotlin
         dependencies {
-            implementation("com.github.milkdrinkers:crate:VERSION")
+            implementation("io.github.milkdrinkers:crate:VERSION")
         }
         ```
 
@@ -29,12 +29,12 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```kotlin
         plugins {
-            id("com.github.johnrengelman.shadow") version "8.1.1"
+            id("com.gradleup.shadow") version "8.3.6"
         }
 
         tasks {
             shadowJar {
-                relocate("com.github.milkdrinkers.Crate", "yourpackage.yourname.crate")
+                relocate("io.github.milkdrinkers.Crate", "yourpackage.yourname.crate")
             }
         }
         ```
@@ -46,7 +46,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```groovy
         repositories {
-            maven { url 'https://jitpack.io' }
+            mavenCentral()
         }
         ```
 
@@ -54,7 +54,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```groovy
         dependencies {
-            implementation 'com.github.milkdrinkers:crate:VERSION'
+            implementation 'io.github.milkdrinkers:crate:VERSION'
         }
         ```
 
@@ -62,12 +62,12 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ```groovy
         plugins {
-            id 'com.github.johnrengelman.shadow' version '8.1.1'
+            id 'com.gradleup.shadow' version '8.3.6'
         }
 
         tasks {
             shadowJar {
-                relocate 'com.github.milkdrinkers.Crate', 'yourpackage.yourname.crate'
+                relocate 'io.github.milkdrinkers.Crate', 'yourpackage.yourname.crate'
             }
         }
         ```
@@ -75,22 +75,11 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
     </Tabs.Tab>
     <Tabs.Tab>
         <Steps>
-        ### Add Repository
-
-        ```xml
-        <repositories>
-            <repository>
-                <id>jitpack.io</id>
-                <url>https://jitpack.io</url>
-            </repository>
-        </repositories>
-        ```
-
         ### Add Dependency
 
         ```xml
         <dependency>
-            <groupId>com.github.milkdrinkers</groupId>
+            <groupId>io.github.milkdrinkers</groupId>
             <artifactId>crate</artifactId>
             <version>VERSION</version>
         </dependency>
@@ -115,7 +104,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
                 <createDependencyReducedPom>false</createDependencyReducedPom>
                 <relocations>
                     <relocation>
-                        <pattern>com.github.milkdrinkers.Crate</pattern>
+                        <pattern>io.github.milkdrinkers.Crate</pattern>
                         <shadedPattern>yourpackage.yourname.crate</shadedPattern>
                     </relocation>
                 </relocations>
