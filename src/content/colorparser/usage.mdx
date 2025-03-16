@@ -1,4 +1,6 @@
 import { Callout } from 'nextra/components'
+import { Tabs } from 'nextra/components'
+import { Steps } from 'nextra/components'
 
 # Basic Usage
 
@@ -83,5 +85,74 @@ player.sendMessage(
     ColorParser.of("Your Displayname is: %player_displayname%")
         .parsePAPIPlaceholders(player)
         .build();
+);
+```
+
+## Usage on older versions/incompatible Adventure versions
+
+If you try to use ColorParser on platforms that implement older versions of adventure, you should use one of adventures platform serializers. 
+
+Here is an example of using ColorParser with modern adventure on ancient `paper-1.8.8`:
+
+First ensure you add and shade adventure and the adventure platform:
+<Tabs items={['Gradle Kotlin', 'Gradle Groovy', 'Maven']}>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Modern Adventure
+
+        ```kotlin
+        dependencies {
+            implementation("net.kyori:adventure-api:VERSION")
+            implementation("net.kyori:adventure-text-minimessage:VERSION")
+            implementation("net.kyori:adventure-platform-bukkit:VERSION") // Add platform support
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Modern Adventure
+
+        ```groovy
+        dependencies {
+            implementation "net.kyori:adventure-api:VERSION"
+            implementation "net.kyori:adventure-text-minimessage:VERSION"
+            implementation "net.kyori:adventure-platform-bukkit:VERSION" // Add platform support
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Modern Adventure
+
+        ```xml
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        <dependency> <!--Add platform support -->
+            <groupId>net.kyori</groupId> 
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        ```
+        </Steps>
+    </Tabs.Tab>
+</Tabs>
+
+Now use the adventure platform to send you components!
+```java
+adventure.player(player).sendMessage(
+    ColorParser.of("<red>Hello old &a<b>Minecraft!")
+        .parsePAPIPlaceholders(player)
+        .parseLegacy()
+        .build()
 );
 ```

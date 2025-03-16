@@ -13,7 +13,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```kotlin
         repositories {
-            maven("https://jitpack.io")
+            mavenCentral()
         }
         ```
 
@@ -21,7 +21,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```kotlin
         dependencies {
-            implementation("com.github.milkdrinkers:colorparser:VERSION")
+            implementation("io.github.milkdrinkers:colorparser:VERSION")
         }
         ```
 
@@ -29,12 +29,12 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```kotlin
         plugins {
-            id("com.github.johnrengelman.shadow") version "8.1.1"
+            id("com.gradleup.shadow") version "8.3.6"
         }
 
         tasks {
             shadowJar {
-                relocate("com.github.milkdrinkers.colorparser", "yourpackage.yourname.colorparser")
+                relocate("io.github.milkdrinkers.colorparser", "yourpackage.yourname.colorparser")
             }
         }
         ```
@@ -46,7 +46,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```groovy
         repositories {
-            maven { url 'https://jitpack.io' }
+            mavenCentral()
         }
         ```
 
@@ -54,7 +54,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```groovy
         dependencies {
-            implementation 'com.github.milkdrinkers:colorparser:VERSION'
+            implementation 'io.github.milkdrinkers:colorparser:VERSION'
         }
         ```
 
@@ -62,12 +62,12 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```groovy
         plugins {
-            id 'com.github.johnrengelman.shadow' version '8.1.1'
+            id 'com.gradleup.shadow' version '8.3.6'
         }
 
         tasks {
             shadowJar {
-                relocate 'com.github.milkdrinkers.colorparser', 'yourpackage.yourname.colorparser'
+                relocate 'io.github.milkdrinkers.colorparser', 'yourpackage.yourname.colorparser'
             }
         }
         ```
@@ -75,22 +75,11 @@ In order to use ColorParser you will need to download it using a BuildTool like 
     </Tabs.Tab>
     <Tabs.Tab>
         <Steps>
-        ### Add Repository
-
-        ```xml
-        <repositories>
-            <repository>
-                <id>jitpack.io</id>
-                <url>https://jitpack.io</url>
-            </repository>
-        </repositories>
-        ```
-
         ### Add Dependency
 
         ```xml
         <dependency>
-            <groupId>com.github.milkdrinkers</groupId>
+            <groupId>io.github.milkdrinkers</groupId>
             <artifactId>colorparser</artifactId>
             <version>VERSION</version>
         </dependency>
@@ -115,7 +104,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
                 <createDependencyReducedPom>false</createDependencyReducedPom>
                 <relocations>
                     <relocation>
-                        <pattern>com.github.milkdrinkers.colorparser</pattern>
+                        <pattern>io.github.milkdrinkers.colorparser</pattern>
                         <shadedPattern>yourpackage.yourname.colorparser</shadedPattern>
                     </relocation>
                 </relocations>
