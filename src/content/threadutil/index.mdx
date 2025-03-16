@@ -1,0 +1,22 @@
+---
+title: ThreadUtil
+---
+
+# Introduction
+
+ThreadUtil is a fluent, multiplatform scheduling utility for Minecraft software, providing elegant async/sync runnable chaining. By default it has platform adapters for Bukkit, Spigot, Paper and Velocity.
+
+The library is maintained with three goals in mind: stability, performance and utility. It is tested and works on java **8** and above.
+
+## Terminology
+
+- **Main**/**Main Thread** - ThreadUtil will, when provided by a platform adapter use the platforms **main** game thread to execute synchronous tasks.*
+- **Synchronously**/**Sync** - In ThreadUtil this always refers to executing code on the main thread.
+- **Asynchronously**/**Async** - In ThreadUtil this always refers to executing code off the main thread.
+- **Task** - A task represents a unit of code that is to be executed.
+- **Task Queue** - A collection of tasks that will be executed in order.
+
+## Links
+
+* [GitHub Repository]("https://github.com/milkdrinkers/ThreadUtil")
+* [JavaDoc](https://javadoc.io/doc/io.github.milkdrinkers/threadutil-common)

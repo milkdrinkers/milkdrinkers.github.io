@@ -1,0 +1,180 @@
+import { Callout } from 'nextra/components'
+import { Tabs } from 'nextra/components'
+import { Steps } from 'nextra/components'
+
+# Basic Usage
+
+<Callout emoji="">
+Most of these examples assume a Bukkit environment.
+</Callout>
+
+To begin with, `Scheduler` is the class used for interacting with ThreadUtil. It is statically accessible and thread-safe. After `Scheduler#init(PlatformAdapter platform)` has been executed, it is safe to use all ThreadUtil API.
+
+## Enabling/Disabling ThreadUtil
+
+### Enabling
+
+Before you can start scheduling jobs usinng ThreadUtil you will need to initialize the `Scheduler`.
+
+This is done by running `Scheduler#init(PlatformAdapter platform)` when your software starts.
+
+```java
+@Override
+public void onEnable() {
+    Scheduler.init(new PlatformBukkit(plugin));
+}
+```
+
+Init takes any `PlatformAdapter`. Please see [Platforms](./platforms.mdx) for all available platforms.
+
+### Disabling
+
+It is important that you shutdown ThreadUtil, or any running tasks may be interrupted. By default ThreadUtil waits 60 seconds for all tasks to finish before killing them.
+
+```java
+@Override
+public void onDisable() {
+    Scheduler.shutdown();
+}
+```
+
+### Error Handling
+
+You can set a global handler for the `Scheduler` like this:
+
+```java
+Scheduler.setErrorHandler(throwable -> {});
+```
+
+## Explanation
+
+### Task Queue
+
+A task queue is a queue of tasks. When a queue is executed the tasks will execute sequentially in the order they are defined.
+
+```java
+Scheduler
+    .sync(() -> {}) // Task 1
+    .sync(() -> {}) // Task 2
+    .delay(20) // Task 3
+    .sync(() -> {}) // Task 4
+    .execute(); // Begins executing the queue
+```
+
+### Task
+
+All tasks receive an **input parameter** and provide a **return value**. The return value is passed as a parameter onto the next task.
+
+```java
+Scheduler
+    .sync(() -> {
+        return "Hello "; // Pass parameter to the next task
+    })
+    .sync((text) -> {
+        return text + "world!"; // Pass parameter to the next task
+    })
+    .delay(20) // Delays don't interfere with the passed parameter
+    .sync((text) -> {
+        System.out.println(text); // Prints 'Hello world!'
+    })
+    .execute();
+```
+
+## Methods
+
+### sync
+
+The `Scheduler#sync(...)` method schedules a task to run synchronously.
+
+```java
+Scheduler
+    .sync(() -> {
+        System.out.println("I will run on the main thread!");
+    })
+    .execute();
+```
+
+### async
+
+The `Scheduler#async(...)` method schedules a task to run asynchronously.
+
+```java
+Scheduler
+    .async(() -> {
+        System.out.println("I will run on a random thread!");
+    })
+    .execute();
+```
+
+### delay
+
+The `Scheduler#delay(...)` method schedules a task that waits before continuing to the next task. It accepts both ticks (*Where supported by the platform*) and java `Duration`'s.
+
+```java
+Scheduler
+    .delay(Duration.ofSeconds(5))
+    .execute();
+```
+
+```java
+Scheduler
+    .delay(5)
+    .execute();
+```
+
+### execute
+
+The `TaskQueue#execute()` method schedules the current `TaskQueue` (*Group of tasks*) to begin executing.
+
+```java
+Scheduler
+    .delay(Duration.ofSeconds(5))
+    .sync(() -> {
+        System.out.println("I will run 5 seconds after you run #execute()!");
+    })
+    .execute();
+```
+
+
+## Examples
+
+### Fetch Data From Database
+
+```java
+Scheduler
+    .async(() -> {
+        return fetchPlayerData(player.getUniqueId()); // Get player data from database, async
+    })
+    .delay(Duration.ofSeconds(10)) // Wait 10 seconds for no reason
+    .sync(playerData -> {
+        player.sendMessage("Loaded: " + playerData.getPlayerNickname()); // Send a message using the player data, sync
+        return playerData;
+    })
+    .async(playerData -> {
+        saveToFile(playerData); // Save player data to disk, async
+    })
+    .execute(); // Starts executing the TaskQueue
+```
+
+### Cancel A Running TaskQueue
+
+```java
+// Start executing the queue and store the running task queue
+RunningTaskQueue taskQueue = Scheduler
+    .async(() -> {
+        return fetchPlayerData(player.getUniqueId());
+    })
+    .delay(Duration.ofSeconds(10))
+    .async(playerData -> {
+        saveToFile(playerData);
+    })
+    .execute();
+
+// Wait 5 seconds then cancel the other queue
+Scheduler
+    .delay(Duration.ofSeconds(5))
+    .sync(() -> {
+        taskQueue.cancel();
+    })
+    .execute();
+```

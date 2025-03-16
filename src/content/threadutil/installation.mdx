@@ -1,0 +1,120 @@
+import { Steps, Tabs } from 'nextra/components'
+
+# Installation
+
+## Adding Dependency
+
+In order to use ThreadUtil you will need to download it using a BuildTool like Maven or Gradle. We also highly recommend relocating/shading the library into your own package. 
+
+You may add whichever platform adapter you need. In this example we add the bukkit adapter for Bukkit, Spigot and Paper support.
+
+<Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Repository
+
+        ```kotlin
+        repositories {
+            mavenCentral()
+        }
+        ```
+
+        ### Add Dependency
+
+        ```kotlin
+        dependencies {
+            implementation("io.github.milkdrinkers:threadutil-bukkit:VERSION")
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```kotlin
+        plugins {
+            id("com.gradleup.shadow") version "8.3.6"
+        }
+
+        tasks {
+            shadowJar {
+                relocate("io.github.milkdrinkers.threadutil", "yourpackage.threadutil")
+            }
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Repository
+
+        ```groovy
+        repositories {
+            mavenCentral()
+        }
+        ```
+
+        ### Add Dependency
+
+        ```groovy
+        dependencies {
+            implementation 'io.github.milkdrinkers:threadutil-bukkit:VERSION'
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```groovy
+        plugins {
+            id 'com.gradleup.shadow' version '8.3.6'
+        }
+
+        tasks {
+            shadowJar {
+                relocate 'io.github.milkdrinkers.threadutil', 'yourpackage.threadutil'
+            }
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Dependency
+
+        ```xml
+        <dependency>
+            <groupId>io.github.milkdrinkers</groupId>
+            <artifactId>threadutil-bukkit</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        ```
+
+        ### Shade Dependency
+
+        ```xml
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <createDependencyReducedPom>false</createDependencyReducedPom>
+                <relocations>
+                    <relocation>
+                        <pattern>io.github.milkdrinkers.threadutil</pattern>
+                        <shadedPattern>yourpackage.threadutil</shadedPattern>
+                    </relocation>
+                </relocations>
+            </configuration>
+        </plugin>
+        ```
+        </Steps>
+    </Tabs.Tab>
+</Tabs>
+
+Well done! Next up have a look at all the available [Platforms](./platforms.mdx).

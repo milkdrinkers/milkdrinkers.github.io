@@ -16,6 +16,9 @@ export default {
     crate: {
         type: "page",
     },
+    threadutil: {
+        type: "page",
+    },
     about: {
         type: "page"
     },

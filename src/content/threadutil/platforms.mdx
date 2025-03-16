@@ -1,0 +1,46 @@
+import { Steps, Tabs } from 'nextra/components'
+
+# Platforms
+
+> [!NOTE]
+>
+> All platform adapter modules transitively include the `threadutil-common` module.
+
+In order to use ThreadUtil you will need to use a platform adapter. In the install guide we showed you how to download the Bukkit adapter.
+
+## Bukkit
+
+`threadutil-bukkit`
+```java
+PlatformBukkit(Plugin plugin)
+```
+
+Bukkit based servers have a main thread where most game logic executes. `Sync` tasks always execute on the main thread using the Bukkit Scheduler. `Async` tasks are always executed using TheadUtil's thread pool.
+
+## Velocity
+
+`threadutil-velocity`
+```java
+PlatformVelocity(Plugin plugin, ProxyServer server)
+```
+
+Velocity has no "**main**" thread and as such `Sync` and `Async` tasks always execute asynchronously. However, `Async` tasks are still always executed using TheadUtil's thread pool.
+
+## Sponge
+
+`threadutil-sponge`
+```java
+PlatformSponge(PluginContainer plugin)
+```
+
+Sponge servers have a main thread where most game logic executes. `Sync` tasks always execute on the main thread using the Sponge Scheduler. `Async` tasks are always executed using TheadUtil's thread pool.
+
+## Custom
+
+If your platform lacks an adapter you can add the `threadutil-common` module, and create your own platform adapter.
+
+Create a platform adapter by implementing `PlatformAdapter`. Then pass your platform adapter object into the `Scheduler#init(PlatformAdapter platform)` method.
+
+---
+
+Next up have a look at how [usage](./usage.mdx).
