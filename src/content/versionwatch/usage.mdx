@@ -60,6 +60,12 @@ if (watcher.isLatest()) { // Uses cached result of previous fetch
 } else {
     System.out.println("Update available: " + watcher.getDownloadURL()); // The url to the latest release
 }
+
+if (watcher.isOutdated()) { // Uses cached result of previous fetch
+    System.out.println("Update available: " + watcher.getDownloadURL()); // The url to the latest release
+} else {
+    System.out.println("No updates available");
+}
 ```
 
 ### Information
