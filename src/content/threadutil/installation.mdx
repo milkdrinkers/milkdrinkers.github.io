@@ -13,7 +13,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
         <Steps>
         ### Add Repository
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         repositories {
             mavenCentral()
         }
@@ -21,7 +21,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
 
         ### Add Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("io.github.milkdrinkers:threadutil-bukkit:VERSION")
         }
@@ -29,7 +29,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
 
         ### Shade Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         plugins {
             id("com.gradleup.shadow") version "8.3.6"
         }
@@ -46,7 +46,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
         <Steps>
         ### Add Repository
 
-        ```groovy
+        ```groovy filename="build.gradle"
         repositories {
             mavenCentral()
         }
@@ -54,7 +54,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
 
         ### Add Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         dependencies {
             implementation 'io.github.milkdrinkers:threadutil-bukkit:VERSION'
         }
@@ -62,7 +62,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
 
         ### Shade Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         plugins {
             id 'com.gradleup.shadow' version '8.3.6'
         }
@@ -79,7 +79,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
         <Steps>
         ### Add Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>threadutil-bukkit</artifactId>
@@ -89,7 +89,7 @@ You may add whichever platform adapter you need. In this example we add the bukk
 
         ### Shade Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>

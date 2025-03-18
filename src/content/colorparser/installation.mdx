@@ -11,7 +11,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         <Steps>
         ### Add Repository
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         repositories {
             mavenCentral()
         }
@@ -19,7 +19,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ### Add Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("io.github.milkdrinkers:colorparser:VERSION")
         }
@@ -27,7 +27,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ### Shade Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         plugins {
             id("com.gradleup.shadow") version "8.3.6"
         }
@@ -44,7 +44,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         <Steps>
         ### Add Repository
 
-        ```groovy
+        ```groovy filename="build.gradle"
         repositories {
             mavenCentral()
         }
@@ -52,7 +52,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ### Add Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         dependencies {
             implementation 'io.github.milkdrinkers:colorparser:VERSION'
         }
@@ -60,7 +60,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ### Shade Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         plugins {
             id 'com.gradleup.shadow' version '8.3.6'
         }
@@ -77,7 +77,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         <Steps>
         ### Add Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>colorparser</artifactId>
@@ -87,7 +87,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ### Shade Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
@@ -126,7 +126,7 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         <Steps>
         ### Add Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("net.kyori:adventure-api:VERSION")
             implementation("net.kyori:adventure-text-minimessage:VERSION")
@@ -138,7 +138,7 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         <Steps>
         ### Add Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         dependencies {
             implementation "net.kyori:adventure-api:VERSION"
             implementation "net.kyori:adventure-text-minimessage:VERSION"
@@ -150,7 +150,7 @@ Check supported platforms [here](https://docs.advntr.dev/platform/native.html). 
         <Steps>
         ### Add Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>

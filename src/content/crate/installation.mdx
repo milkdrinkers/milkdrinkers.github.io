@@ -11,7 +11,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         <Steps>
         ### Add Repository
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         repositories {
             mavenCentral()
         }
@@ -19,7 +19,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ### Add Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("io.github.milkdrinkers:crate:VERSION")
         }
@@ -27,7 +27,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ### Shade Dependency
 
-        ```kotlin
+        ```kotlin filename="build.gradle.kts"
         plugins {
             id("com.gradleup.shadow") version "8.3.6"
         }
@@ -44,7 +44,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         <Steps>
         ### Add Repository
 
-        ```groovy
+        ```groovy filename="build.gradle"
         repositories {
             mavenCentral()
         }
@@ -52,7 +52,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ### Add Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         dependencies {
             implementation 'io.github.milkdrinkers:crate:VERSION'
         }
@@ -60,7 +60,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ### Shade Dependency
 
-        ```groovy
+        ```groovy filename="build.gradle"
         plugins {
             id 'com.gradleup.shadow' version '8.3.6'
         }
@@ -77,7 +77,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
         <Steps>
         ### Add Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>crate</artifactId>
@@ -87,7 +87,7 @@ In order to use Crate you will need to download it using a BuildTool like Maven 
 
         ### Shade Dependency
 
-        ```xml
+        ```xml filename="pom.xml"
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
