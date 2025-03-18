@@ -1,0 +1,223 @@
+import { Callout, Tabs, Steps } from 'nextra/components'
+
+# VersionWatch Usage Guide
+
+<Callout type="warning" emoji="⚠️">
+  Ensure you have **Java 8** or above and the `Java-Semver` dependency installed before using VersionWatch!
+</Callout>
+
+## Usage
+
+### Creating a VersionWatcher
+
+Here's a simple example of how to setup a version watcher that can do version checking against a project hosted on SpigotMC.
+
+<Callout type="info" emoji="💡">`#withAgent(String)` should identify your application for platform API rate limiting purposes.</Callout>
+
+```java
+import io.github.milkdrinkers.javasemver.Version;
+import io.github.milkdrinkers.versionwatch.Platform;
+import io.github.milkdrinkers.versionwatch.VersionWatcher;
+
+Version currentVersion = Version.of("1.0.0"); // Your plugins current version
+
+VersionWatcher watcher = VersionWatcher.builder()
+    .withPlatform(Platform.Spigot)
+    .withVersion(currentVersion)
+    .withResourceId("resource-id")
+    .withAgent("MyAwesomePlugin")
+    .build();
+```
+
+### Fetch Latest Version
+
+<Callout type='info'>Whenever you fetch, the result is stored in the watcher object and can be accessed using `VersionWatcher#getLatestVersion()`.</Callout>
+
+#### Synchronous Fetch
+
+```java
+Version latest1 = watcher.fetchLatest();
+if (latest1 != null)
+    System.out.println("New version available: " + latest);
+```
+
+#### Asynchronous Fetch
+
+```java
+watcher.fetchLatestAsync()
+    .thenAccept(latest -> {
+        if (latest != null)
+            System.out.println("New version available: " + latest);
+    });
+```
+
+### Accessing Version Information
+
+```java
+// Check if the plugin is running the latest version
+if (watcher.isLatest()) { // Uses cached result of previous fetch
+    System.out.println("No updates available");
+} else {
+    System.out.println("Update available: " + watcher.getDownloadURL()); // The url to the latest release
+}
+```
+
+### Information
+
+1. When you fetch (*synchronously or asynchronously*) the latest result is stored in you versionwatcher object. This is then used when you run methods like `VersionWatcher#isLatest()`. 
+2. You application should identify itself properly by setting the agent to something like `VersionWatcher.builder#withAgent("MyPlugin v1.0")`.
+
+## Platform Configuration
+
+### Supported Platforms
+
+| Platform   | Required Parameters                             | Optional Parameters |
+|------------|-------------------------------------------------|---------------------|
+| Spigot     | `resourceId`                                    |                     |
+| GitHub     | `resourceOwner`, `resourceSlug`                 | -                   |
+| Modrinth   | `resourceId` OR `resourceSlug`                  | -                   |
+| CurseForge | `resourceId` OR `resourceSlug`, `apiKey`        | -                   |
+| BuiltByBit | `resourceId`, `token`, `tokenType`              | -                   |
+| Hangar     | `resourceId` OR `resourceSlug`, `resourceOwner` | -                   |
+| Polymart   | `resourceId`                                    | -                   |
+
+These are the required fields for each platform when building a version watcher.
+
+## Platform-Specific Examples
+
+VersionWatcher supports a range of Minecraft-related platforms by default. Refer to the [Supported Platforms](#platform-configuration) to see platform specific requirements.
+
+### Free API
+
+#### GitHub
+
+You can extract the repository owner and slug from your repository url: `https://github.com/<owner>/<slug>`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.GitHub)
+    .withVersion(currentVersion)
+    .withResourceOwner("repository-owner")
+    .withResourceSlug("repository-slug")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+#### Modrinth
+
+###### Project Slug
+
+You can extract the project slug from your project url: `https://modrinth.com/<category>/<slug>`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Modrinth)
+    .withVersion(currentVersion)
+    .withResourceSlug("project-slug")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+###### Project Id
+
+You can find the project id on your project page by clicking the **more options** button.
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Modrinth)
+    .withVersion(currentVersion)
+    .withResourceId("project-id")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+#### Hangar
+
+###### Project Slug
+
+You can extract the project owner and slug from your project url: `https://hangar.papermc.io/<owner>/<slug>`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Hangar)
+    .withVersion(currentVersion)
+    .withResourceSlug("project-slug")
+    .withResourceOwner("project-owner")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+###### Project Id
+
+You can get the project id by using the slug and Hangar API [here](https://hangar.papermc.io/api-docs#get-/api/v1/projects/-slugOrId-).
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Hangar)
+    .withVersion(currentVersion)
+    .withResourceId("project-id")
+    .withResourceOwner("project-owner")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+#### SpigotMC
+
+You can extract the resource id from your resource url: `https://www.spigotmc.org/resources/<title>.<id>/`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Spigot)
+    .withVersion(currentVersion)
+    .withResourceId("resource-id")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+#### Polymart
+
+You can extract the resource id from your resource url: `https://polymart.org/resource/<title>.<id>/`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.Polymart)
+    .withVersion(currentVersion)
+    .withResourceId("resource-id")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+### Gated/Closed API
+
+#### CurseForge
+
+<Callout type='info'>CurseForge requires an API key. You can get one here: [CurseForge Developer Portal](https://console.curseforge.com/#/api-keys).</Callout>
+
+You can find the project id in the sidebar of your project page.
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.CurseForge)
+    .withVersion(currentVersion)
+    .withResourceId("project-id")
+    .withApiKey("api-key")
+    .withAgent("MyModAgent")
+    .build();
+```
+
+#### BuiltByBit
+
+<Callout type='info'>BuiltByBit requires an API Token and active Ultimate subscription. Read more here: [API Wiki](https://builtbybit.com/wiki/ultimate-api/).</Callout>
+
+You can extract the resource id from your resource url: `https://builtbybit.com/resources/<title>.<id>/`. 
+
+```java
+VersionWatcher.builder()
+    .withPlatform(Platform.BuiltByBit)
+    .withVersion(currentVersion)
+    .withResourceId("resource-id")
+    .withToken("api-token")
+    .withTokenType(TokenType.SHARED)
+    .withAgent("MyModAgent")
+    .build();
+```

@@ -19,6 +19,9 @@ export default {
     threadutil: {
         type: "page",
     },
+    versionwatch: {
+        type: "page",
+    },
     javasemver: {
         type: "page",
     },
