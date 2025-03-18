@@ -1,0 +1,118 @@
+import { Steps, Tabs } from 'nextra/components'
+
+# Installation
+
+## Adding Dependency
+
+In order to use Java-Semver you will need to download it using a BuildTool like Maven or Gradle. We also highly recommend relocating/shading the library into your own package. 
+
+<Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Repository
+
+        ```kotlin filename="build.gradle.kts"
+        repositories {
+            mavenCentral()
+        }
+        ```
+
+        ### Add Dependency
+
+        ```kotlin filename="build.gradle.kts"
+        dependencies {
+            implementation("io.github.milkdrinkers:javasemver:VERSION")
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```kotlin filename="build.gradle.kts"
+        plugins {
+            id("com.gradleup.shadow") version "8.3.6"
+        }
+
+        tasks {
+            shadowJar {
+                relocate("io.github.milkdrinkers.javasemver", "yourpackage.javasemver")
+            }
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Repository
+
+        ```groovy filename="build.gradle"
+        repositories {
+            mavenCentral()
+        }
+        ```
+
+        ### Add Dependency
+
+        ```groovy filename="build.gradle"
+        dependencies {
+            implementation 'io.github.milkdrinkers:javasemver:VERSION'
+        }
+        ```
+
+        ### Shade Dependency
+
+        ```groovy filename="build.gradle"
+        plugins {
+            id 'com.gradleup.shadow' version '8.3.6'
+        }
+
+        tasks {
+            shadowJar {
+                relocate 'io.github.milkdrinkers.javasemver', 'yourpackage.javasemver'
+            }
+        }
+        ```
+        </Steps>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        <Steps>
+        ### Add Dependency
+
+        ```xml filename="pom.xml"
+        <dependency>
+            <groupId>io.github.milkdrinkers</groupId>
+            <artifactId>javasemver</artifactId>
+            <version>LATEST_VERSION</version>
+        </dependency>
+        ```
+        
+        ### Shade Dependency
+
+        ```xml filename="pom.xml"
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <createDependencyReducedPom>false</createDependencyReducedPom>
+                <relocations>
+                    <relocation>
+                        <pattern>io.github.milkdrinkers.javasemver</pattern>
+                        <shadedPattern>yourpackage.javasemver</shadedPattern>
+                    </relocation>
+                </relocations>
+            </configuration>
+        </plugin>
+        ```
+        </Steps>
+    </Tabs.Tab>
+</Tabs>
+
+Well done! Next up have a look at all the available [Usage](./usage.mdx).

@@ -1,0 +1,146 @@
+import { Callout } from 'nextra/components'
+import { Tabs } from 'nextra/components'
+
+# Java-Semver Usage Guide
+
+<Callout emoji="⚠️">
+This library strictly follows Semantic Versioning 2.0.0 specifications. Invalid versions will throw `VersionParseException`.
+</Callout>
+
+## Basic Version Handling
+
+<Callout type='info'>**Pre-release** and **build-metadata** fields default to empty strings (`""`) if not set!</Callout>
+
+### Parsing Versions
+
+```java
+// Basic version
+Version v1 = Version.of("1.2.3");
+
+// With pre-release
+Version v2 = Version.of("1.2.3-alpha.1");
+
+// With build metadata
+Version v3 = Version.of("1.2.3+build.20240101");
+
+// Full example
+Version v4 = Version.of("1.2.3-alpha.1+build.20240101");
+
+// Optional example
+Optional<Version> v5 = Version.ofOptional("1.0.0");
+```
+
+### Creating Versions Programmatically
+
+```java
+// Basic version
+Version basic = Version.of(1, 2, 3);
+
+// With pre-release
+Version preRelease = Version.of(1, 2, 3, "beta");
+
+// With build metadata
+Version withBuild = Version.of(1, 2, 3, null, "build.001");
+
+// Full version
+Version full = Version.of(1, 2, 3, "rc.1", "build.002");
+```
+
+## Version Comparison
+
+### Comparison Methods
+
+```java
+Version v1 = Version.of("1.0.0");
+Version v2 = Version.of("1.0.1");
+
+Version.isNewer(v2, v1);        // true
+Version.isNewerOrEqual(v2, v1); // true
+Version.isOlder(v1, v2);        // true
+Version.isOlderOrEqual(v1, v2); // true
+Version.isEqual(v1, v2);        // false
+```
+
+## Validation
+
+<Callout emoji="🚫" type='error'>Invalid versions throw **VersionParseException** when parsed!</Callout>
+
+### Invalid Version Patterns
+
+```java
+// Invalid examples (will throw VersionParseException)
+Version.of("1.02.03"); // Leading zeros
+Version.of("1.2.3-");  // Empty pre-release
+Version.of("1.2.3+");  // Empty build metadata
+Version.of("1.2.3-alpha..1"); // Empty identifier
+```
+
+### Error Handling
+
+```java
+try {
+    Version invalid = Version.of("1.a.3");
+} catch (VersionParseException e) {
+    System.err.println("Invalid version: " + e.getMessage());
+}
+```
+
+```java
+Optional<Version> version = Version.ofOptional("1.a.3"); // Returns empty optional instead of throwing
+```
+
+## Advanced Features
+
+### Version Formatting
+
+```java
+Version v = Version.of(1, 2, 3, "beta", "build.001");
+String str = v.toString(); // "1.2.3-beta+build.001"
+```
+
+### Standard Compliance
+
+```java
+// Strict parsing rules
+Version.of("v1.0.0");      // Valid (auto-trims 'v')
+Version.of("1.0.0-rc.1");  // Valid
+Version.of("1.0.0-01");    // Throws VersionParseException
+```
+
+## Common Patterns
+
+### Accessor Methods
+
+```java
+Version v = Version.of(2, 1, 0, "beta.2", "build.20240321");
+
+v.getVersion();  // "2.1.0"
+v.getVersionFull(); // "2.1.0-beta.2+build.20240321"
+v.toString(); // "2.1.0-beta.2+build.20240321"
+
+v.getMajor(); // 2L
+v.getMinor(); // 1L
+v.getPatch(); // 0L
+v.getPreRelease(); // "beta.2"
+v.getPreReleaseIdentifiers(); // ["beta", "2"]
+v.getBuildMetadata(); // "build.20240321"
+```
+
+### Misc
+
+```java
+Version v = Version.of("1.0.0-beta.1");
+
+v.hasPreRelease() // true, checks if pre-release is empty
+v.hasMeta() // false, checks if build-metadata is empty
+
+v.isAlpha() // false, does not contain "alpha"
+v.isBeta() // true, contains "beta"
+v.isDev() // false, does not contain "dev", "develop", or "development"
+v.isRC() // false, does not contain "rc"
+v.isSnapshot() // false, does not contain "snapshot"
+
+Version.of("1.0.0-SNAPSHOT").isSnapshot(); // true, contains "snapshot"
+Version.of("2.1.0-RC.2").isRC(); // true, contains "rc"
+```
+

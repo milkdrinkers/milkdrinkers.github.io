@@ -19,6 +19,9 @@ export default {
     threadutil: {
         type: "page",
     },
+    javasemver: {
+        type: "page",
+    },
     about: {
         type: "page"
     },
