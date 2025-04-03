@@ -16,13 +16,16 @@ export default {
     crate: {
         type: "page",
     },
+    javasemver: {
+        type: "page",
+    },
     threadutil: {
         type: "page",
     },
     versionwatch: {
         type: "page",
     },
-    javasemver: {
+    wordweaver: {
         type: "page",
     },
     about: {

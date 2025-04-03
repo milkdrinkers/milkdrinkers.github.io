@@ -6,10 +6,12 @@ import { Callout } from 'nextra/components'
 ## Adding Dependency
 
 <Callout emoji="ⓘ" type='error'>
-VersionWatch depends on the [Java-Semver](../javasemver/) library.
+WordWeaver depends on the [Adventure](https://github.com/KyoriPowered/adventure) library.
 </Callout>
 
-In order to use **VersionWatch** you will need to download it and its dependency **javasemver**, using a BuildTool like Maven or Gradle. We also highly recommend relocating/shading the library into your own package. 
+In order to use **WordWeaver** you will need to download it using a BuildTool like Maven or Gradle. We also highly recommend relocating/shading the library into your own package.
+
+WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/adventure) library. Unless you are using a Platform that natively ships Adventure like Paper, Velocity or Fabric, you will need to add Adventure as a dependency as well.
 
 <Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
     <Tabs.Tab>
@@ -26,7 +28,7 @@ In order to use **VersionWatch** you will need to download it and its dependency
 
         ```kotlin filename="build.gradle.kts"
         dependencies {
-            implementation("io.github.milkdrinkers:versionwatch:VERSION")
+            implementation("io.github.milkdrinkers:WordWeaver:VERSION")
             implementation("io.github.milkdrinkers:javasemver:VERSION")
         }
         ```
@@ -40,7 +42,7 @@ In order to use **VersionWatch** you will need to download it and its dependency
 
         tasks {
             shadowJar {
-                relocate("io.github.milkdrinkers.versionwatch", "yourpackage.versionwatch")
+                relocate("io.github.milkdrinkers.wordweaver", "yourpackage.wordweaver")
                 relocate("io.github.milkdrinkers.javasemver", "yourpackage.javasemver")
             }
         }
@@ -61,8 +63,7 @@ In order to use **VersionWatch** you will need to download it and its dependency
 
         ```groovy filename="build.gradle"
         dependencies {
-            implementation 'io.github.milkdrinkers:versionwatch:VERSION'
-            implementation 'io.github.milkdrinkers:javasemver:VERSION'
+            implementation 'io.github.milkdrinkers:wordweaver:VERSION'
         }
         ```
 
@@ -75,8 +76,7 @@ In order to use **VersionWatch** you will need to download it and its dependency
 
         tasks {
             shadowJar {
-                relocate 'io.github.milkdrinkers.versionwatch', 'yourpackage.versionwatch'
-                relocate 'io.github.milkdrinkers.javasemver', 'yourpackage.javasemver'
+                relocate 'io.github.milkdrinkers.wordweaver', 'yourpackage.wordweaver'
             }
         }
         ```
@@ -89,7 +89,7 @@ In order to use **VersionWatch** you will need to download it and its dependency
         ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
-            <artifactId>versionwatch</artifactId>
+            <artifactId>wordweaver</artifactId>
             <version>VERSION</version>
         </dependency>
         <dependency>
@@ -118,12 +118,8 @@ In order to use **VersionWatch** you will need to download it and its dependency
                 <createDependencyReducedPom>false</createDependencyReducedPom>
                 <relocations>
                     <relocation>
-                        <pattern>io.github.milkdrinkers.versionwatch</pattern>
-                        <shadedPattern>yourpackage.versionwatch</shadedPattern>
-                    </relocation>
-                    <relocation>
-                        <pattern>io.github.milkdrinkers.javasemver</pattern>
-                        <shadedPattern>yourpackage.javasemver</shadedPattern>
+                        <pattern>io.github.milkdrinkers.wordweaver</pattern>
+                        <shadedPattern>yourpackage.wordweaver</shadedPattern>
                     </relocation>
                 </relocations>
             </configuration>
@@ -133,4 +129,4 @@ In order to use **VersionWatch** you will need to download it and its dependency
     </Tabs.Tab>
 </Tabs>
 
-Well done! Next up have a look at the [usage page](./usage.mdx).
+Well done! Next up have a look at [usage](./usage.mdx).

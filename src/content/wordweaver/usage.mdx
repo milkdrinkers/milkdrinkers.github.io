@@ -1,0 +1,142 @@
+import { Callout, Tabs, Steps } from 'nextra/components'
+
+# WordWeaver Usage Guide
+
+## Usage
+
+### Initializing
+
+Before you can use the WordWeaver instance it has to be initialized.
+
+#### Simple
+
+```java
+import io.github.milkdrinkers.wordweaver.Translation;
+import io.github.milkdrinkers.wordweaver.config.TranslationConfig;
+
+// Create your WordWeaver config
+TranslationConfig config = TranslationConfig.builder()
+    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
+    .defaultLanguage("en_US") // The fallback language file to use
+    .language("fr_FR") // The primary language file to use
+    .build();
+
+// Initialize WordWeaver
+Translation.initialize(config);
+```
+
+#### Advanced
+
+```java
+import io.github.milkdrinkers.wordweaver.Translation;
+import io.github.milkdrinkers.wordweaver.config.TranslationConfig;
+
+// Create your WordWeaver config
+TranslationConfig config = TranslationConfig.builder()
+    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
+    .defaultLanguage("en_US") // The fallback language file to use
+    .language("fr_FR") // The primary language file to use
+    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
+    .extractLanguages(true) // Extract missing language files
+    .updateLanguages(true) // Update existing language files in translationDirectory with missing keys
+    .componentConverter(text -> Component.text(text)) // Any Function<String, Component> that converts strings to components
+    .build();
+
+// Initialize WordWeaver
+Translation.initialize(config);
+```
+
+### Using Translations
+
+```java
+// Get a string from the active language
+String message = Translation.of("messages.welcome");
+
+// Get a string with a fallback if the key doesn't exist in either the selected lang or fallback/default lang
+String greeting = Translation.of("messages.greeting", "Hello, World!");
+
+// Get a list of strings
+List<String> rules = Translation.ofList("server.rules");
+
+// Get translations as Adventure Components
+Component welcomeMessage = Translation.as("messages.welcome");
+Component errorMessage = Translation.as("messages.error", Component.text("An error occurred"));
+List<Component> helpMessages = Translation.asList("help.commands");
+```
+
+### Changing Languages
+
+After changing settings you have reload to apply the changes.
+
+```java
+// Change the currently ysed language
+Translation.setLanguage("fr_FR");
+
+// Change the default/fallback language
+Translation.setDefaultLanguage("en_US");
+
+// Reload to apply new language settings
+Translation.reload();
+
+// Get the current language
+String current = Translation.getLanguage();
+
+// Get the default language
+String defaultLang = Translation.getDefaultLanguage();
+```
+
+## Information
+
+### Translation/Language Files
+
+Translation files are JSONC (*Json with comments*) files extracted to the specified `translationDirectory` directory. Each supported language has its own file with a name matching the language code (e.g., `en_US.json`, `fr_FR.json`).
+
+By default, the library looks for language files inside your `/resources/lang/` directory.
+
+Example `en_US.json`:
+
+```json
+{
+  "messages": {
+    "welcome": "Welcome to our server!",
+    "goodbye": "Goodbye, see you soon!",
+    "error": "An error occurred: {0}"
+  },
+  "server": {
+    "rules": [
+      "Be respectful to other players",
+      "No griefing or stealing",
+      "Have fun!"
+    ]
+  }
+}
+```
+
+### Extracting Files
+
+When enabled, original translation files shipped with your program will be extracted to the `translationDirectory` on initialization.
+
+```java
+TranslationConfig config = TranslationConfig.builder()
+    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
+    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
+    .extractLanguages(true) // Defaults to true
+    .build();
+```
+
+### Adding Missing Keys To Outdated Language Files
+
+When enabled, on initialization, WordWeaver will try to add missing keys from original lang files to their extracted counterparts.
+
+The following specs will be followed:
+- The values of keys in the extracted file are not changed.
+- Additional keys found in the extracted file are not removed but re-added to the bottom of the file.
+- The keys in the extracted file will be re-ordered to mirror the order of entries in the original file.
+
+```java
+TranslationConfig config = TranslationConfig.builder()
+    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
+    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
+    .updateLanguages(true) // Defaults to true
+    .build();
+```
