@@ -66,7 +66,7 @@ List<Component> helpMessages = Translation.asList("help.commands");
 
 ### Changing Languages
 
-After changing settings you have reload to apply the changes.
+After changing settings, a reload is required to apply the changes.
 
 ```java
 // Change the currently ysed language
@@ -85,13 +85,18 @@ String current = Translation.getLanguage();
 String defaultLang = Translation.getDefaultLanguage();
 ```
 
+### Reloading Translation/Language Files
+
+```java
+// Reloads all translations from disk
+Translation.reload();
+```
+
 ## Information
 
 ### Translation/Language Files
 
-Translation files are JSONC (*Json with comments*) files extracted to the specified `translationDirectory` directory. Each supported language has its own file with a name matching the language code (e.g., `en_US.json`, `fr_FR.json`).
-
-By default, the library looks for language files inside your `/resources/lang/` directory.
+Translation files are JSONC (*Json with comments*) files extracted to, and loaded from the specified `translationDirectory` directory. Each supported language has its own file with a name matching the language code (e.g., `en_US.json`, `fr_FR.json`).
 
 Example `en_US.json`:
 
@@ -116,6 +121,8 @@ Example `en_US.json`:
 
 When enabled, original translation files shipped with your program will be extracted to the `translationDirectory` on initialization.
 
+By default, the library looks for original language files inside your `/resources/lang/` directory.
+
 ```java
 TranslationConfig config = TranslationConfig.builder()
     .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
@@ -127,6 +134,8 @@ TranslationConfig config = TranslationConfig.builder()
 ### Adding Missing Keys To Outdated Language Files
 
 When enabled, on initialization, WordWeaver will try to add missing keys from original lang files to their extracted counterparts.
+
+By default, the library looks for original language files inside your `/resources/lang/` directory.
 
 The following specs will be followed:
 - The values of keys in the extracted file are not changed.

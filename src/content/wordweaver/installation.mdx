@@ -29,7 +29,6 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("io.github.milkdrinkers:WordWeaver:VERSION")
-            implementation("io.github.milkdrinkers:javasemver:VERSION")
         }
         ```
 
@@ -43,7 +42,6 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         tasks {
             shadowJar {
                 relocate("io.github.milkdrinkers.wordweaver", "yourpackage.wordweaver")
-                relocate("io.github.milkdrinkers.javasemver", "yourpackage.javasemver")
             }
         }
         ```
@@ -90,11 +88,6 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>wordweaver</artifactId>
-            <version>VERSION</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.milkdrinkers</groupId>
-            <artifactId>javasemver</artifactId>
             <version>VERSION</version>
         </dependency>
         ```
