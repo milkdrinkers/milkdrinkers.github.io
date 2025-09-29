@@ -1,0 +1,19 @@
+import { Steps, Tabs } from 'nextra/components'
+
+# Migrating
+
+## `3.X.X` To `4.X.X`
+
+Migrating from `3.X.X` of ColorParser to `4.X.X` is rather simple (*Even on larger projects!*) as old methods are still present but renamed.
+
+1. Follow the installation instructions page to install the new library version.
+
+2. Migrate/Replace package names from old to new location. For most people that will mean replacing the following package import:
+    - `io.github.milkdrinkers.colorparser` -> `io.github.milkdrinkers.colorparser.paper`
+
+3. Migrate/Replace method usage:
+    - `ColorParser#parseLegacy` -> `ColorParser#legacy`
+    - `ColorParser#parsePAPIPlaceholders` -> `ColorParser#papi`
+    - `ColorParser#parseMinimessagePlaceholder` -> `ColorParser#with`
+
+4. That's it, you can now use ColorParser 4.0.0!

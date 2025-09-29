@@ -5,6 +5,7 @@ export default {
     },
     index: "Introduction",
     installation: "Installation",
+    migrating: "Migrating (3.X.X To 4.X.X)",
     "-- usage": {
         type: "separator",
         title: "Usage",

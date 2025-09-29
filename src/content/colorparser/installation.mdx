@@ -6,6 +6,18 @@ import { Steps, Tabs } from 'nextra/components'
 
 In order to use ColorParser you will need to download it using a BuildTool like Maven or Gradle.
 
+The currently supported platforms are:
+- `io.github.milkdrinkers:colorparser-bukkit`
+- `io.github.milkdrinkers:colorparser-paper`
+- `io.github.milkdrinkers:colorparser-velocity`
+- `io.github.milkdrinkers:colorparser-sponge8`
+- `io.github.milkdrinkers:colorparser-sponge9`
+- `io.github.milkdrinkers:colorparser-sponge10`
+- `io.github.milkdrinkers:colorparser-sponge11`
+- `io.github.milkdrinkers:colorparser-sponge12`
+
+For a full list of platforms and versions [check out Maven Central here](https://central.sonatype.com/search?q=colorparser&namespace=io.github.milkdrinkers).
+
 <Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
     <Tabs.Tab>
         <Steps>
@@ -22,6 +34,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         ```kotlin filename="build.gradle.kts"
         dependencies {
             implementation("io.github.milkdrinkers:colorparser:VERSION")
+            implementation("io.github.milkdrinkers:colorparser-PLATFORM:VERSION")
         }
         ```
 
@@ -54,7 +67,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
 
         ```groovy filename="build.gradle"
         dependencies {
-            implementation 'io.github.milkdrinkers:colorparser:VERSION'
+            implementation 'io.github.milkdrinkers:colorparser-PLATFORM:VERSION'
         }
         ```
 
@@ -80,7 +93,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
         ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
-            <artifactId>colorparser</artifactId>
+            <artifactId>colorparser-PLATFORM</artifactId>
             <version>VERSION</version>
         </dependency>
         ```
@@ -115,7 +128,7 @@ In order to use ColorParser you will need to download it using a BuildTool like 
     </Tabs.Tab>
 </Tabs>
 
-## Platforms Other Than PaperMC
+## Platforms That Don't Natively Ship Adventure
 
 If using Spigot (*or any other platform that doesn't natively ship Adventure*), then you will need to add Adventure as a dependency in your project.
 
