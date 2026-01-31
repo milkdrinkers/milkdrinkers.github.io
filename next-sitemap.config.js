@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: 'https://milkdrinkers.github.io/',
+    siteUrl: 'https://docs.milkdrinkers.dev/',
     generateRobotsTxt: true,
     generateIndexSitemap: false,
     outDir: './out',

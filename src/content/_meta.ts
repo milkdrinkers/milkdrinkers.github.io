@@ -34,6 +34,6 @@ export default {
     contact: {
         title: "Contact",
         type: "page",
-        href: "https://github.com/milkdrinkers/milkdrinkers.github.io",
+        href: "https://github.com/milkdrinkers/docs.milkdrinkers.dev",
     },
 } as NextraMetadata;

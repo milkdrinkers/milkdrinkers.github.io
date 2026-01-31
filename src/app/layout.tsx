@@ -23,7 +23,7 @@ export const metadata: NextraMetadata = {
         apple: '/static/milk.ico',
     },
     openGraph: {
-        url: 'https://milkdrinkers.github.io',
+        url: 'https://docs.milkdrinkers.dev',
         siteName: 'Milkdrinkers Docs',
         locale: 'en_US',
         type: 'website',
@@ -65,7 +65,7 @@ export default async function RootLayout({ children }) {
                     // banner={banner}
                     navbar={navbar}
                     pageMap={await getPageMap()}
-                    docsRepositoryBase="https://github.com/milkdrinkers/milkdrinkers.github.io/blob/main"
+                    docsRepositoryBase="https://github.com/milkdrinkers/docs.milkdrinkers.dev/blob/main"
                     editLink="Edit this page on GitHub"
                     sidebar={{ defaultMenuCollapseLevel: 1, toggleButton: true }}
                     footer={footer}
