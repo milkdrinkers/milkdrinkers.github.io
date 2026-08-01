@@ -6,12 +6,16 @@ import { Callout } from 'nextra/components'
 ## Adding Dependency
 
 <Callout emoji="ⓘ" type='error'>
-WordWeaver depends on the [Adventure](https://github.com/KyoriPowered/adventure) library.
+WordWeaver depends on the [Adventure](https://github.com/PaperMC/adventure) library.
 </Callout>
 
 In order to use **WordWeaver** you will need to download it using a BuildTool like Maven or Gradle. We also highly recommend relocating/shading the library into your own package.
 
-WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/adventure) library. Unless you are using a Platform that natively ships Adventure like Paper, Velocity or Fabric, you will need to add Adventure as a dependency as well.
+WordWeaver depends on Kyori's [Adventure](https://github.com/PaperMC/adventure) library. Unless you are using a Platform that natively ships Adventure like Paper, Velocity or Fabric, you will need to add Adventure as a dependency as well.
+
+<Callout emoji="ⓘ" type='info'>
+The core `wordweaver` artifact ships with a `.properties` parser. JSON/JSONC support lives in the optional `wordweaver-json` (you provide GSON) or `wordweaver-json-shaded` (GSON bundled and relocated) modules. Add one to your classpath and it registers automatically. Pick only one of the two JSON modules.
+</Callout>
 
 <Tabs items={['Gradle Kotlin DSL', 'Gradle Groovy', 'Maven']}>
     <Tabs.Tab>
@@ -26,13 +30,24 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
 
         ### Add Dependency
 
+        The core only ships a `.properties` parser. Add a JSON parser module if you want JSON/JSONC support.
+
         ```kotlin filename="build.gradle.kts"
         dependencies {
-            implementation("io.github.milkdrinkers:WordWeaver:VERSION")
+            implementation("io.github.milkdrinkers:wordweaver:VERSION")
+
+            // Option A, bring your own GSON
+            implementation("io.github.milkdrinkers:wordweaver-json:VERSION")
+            implementation("com.google.code.gson:gson:x.x.x")
+
+            // Option B, uses bundled GSON (do NOT combine with Option A)
+            implementation("io.github.milkdrinkers:wordweaver-json-shaded:VERSION")
         }
         ```
 
         ### Shade Dependency
+
+        When shading, merge service files so that every parser module stays registered.
 
         ```kotlin filename="build.gradle.kts"
         plugins {
@@ -42,6 +57,8 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         tasks {
             shadowJar {
                 relocate("io.github.milkdrinkers.wordweaver", "yourpackage.wordweaver")
+
+                mergeServiceFiles()
             }
         }
         ```
@@ -59,13 +76,24 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
 
         ### Add Dependency
 
+        The core only ships a `.properties` parser. Add a JSON parser module if you want JSON/JSONC support.
+
         ```groovy filename="build.gradle"
         dependencies {
             implementation 'io.github.milkdrinkers:wordweaver:VERSION'
+
+            // Option A, bring your own GSON
+            implementation 'io.github.milkdrinkers:wordweaver-json:VERSION'
+            implementation 'com.google.code.gson:gson:x.x.x'
+
+            // Option B, uses bundled GSON (do NOT combine with Option A)
+            implementation 'io.github.milkdrinkers:wordweaver-json-shaded:VERSION'
         }
         ```
 
         ### Shade Dependency
+
+        When shading, merge service files so that every parser module stays registered.
 
         ```groovy filename="build.gradle"
         plugins {
@@ -75,6 +103,8 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         tasks {
             shadowJar {
                 relocate 'io.github.milkdrinkers.wordweaver', 'yourpackage.wordweaver'
+
+                mergeServiceFiles()
             }
         }
         ```
@@ -84,15 +114,38 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
         <Steps>
         ### Add Dependency
 
+        The core only ships a `.properties` parser. Add a JSON parser module if you want JSON/JSONC support.
+
         ```xml filename="pom.xml"
         <dependency>
             <groupId>io.github.milkdrinkers</groupId>
             <artifactId>wordweaver</artifactId>
             <version>VERSION</version>
         </dependency>
+
+        <!-- Option A, bring your own GSON -->
+        <dependency>
+            <groupId>io.github.milkdrinkers</groupId>
+            <artifactId>wordweaver-json</artifactId>
+            <version>VERSION</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>x.x.x</version>
+        </dependency>
+
+        <!-- Option B, uses bundled GSON (do NOT combine with Option A) -->
+        <dependency>
+            <groupId>io.github.milkdrinkers</groupId>
+            <artifactId>wordweaver-json-shaded</artifactId>
+            <version>VERSION</version>
+        </dependency>
         ```
 
         ### Shade Dependency
+
+        When shading, merge service files so that every parser module stays registered. The `ServicesResourceTransformer` handles this.
 
         ```xml filename="pom.xml"
         <plugin>
@@ -115,6 +168,9 @@ WordWeaver depends on Kyori's [Adventure](https://github.com/KyoriPowered/advent
                         <shadedPattern>yourpackage.wordweaver</shadedPattern>
                     </relocation>
                 </relocations>
+                <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                </transformers>
             </configuration>
         </plugin>
         ```

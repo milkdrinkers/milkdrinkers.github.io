@@ -16,9 +16,10 @@ import io.github.milkdrinkers.wordweaver.config.TranslationConfig;
 
 // Create your WordWeaver config
 TranslationConfig config = TranslationConfig.builder()
-    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
-    .defaultLanguage("en_US") // The fallback language file to use
-    .language("fr_FR") // The primary language file to use
+    .namespace("wordweaver:example") // The namespace of your plugin/mod (required)
+    .translationDirectory(Paths.get("languages")) // The directory bundle files will be extracted to
+    .defaultLocale("en_US") // The fallback locale
+    .locale("fr_FR") // The active locale
     .build();
 
 // Initialize WordWeaver
@@ -33,12 +34,13 @@ import io.github.milkdrinkers.wordweaver.config.TranslationConfig;
 
 // Create your WordWeaver config
 TranslationConfig config = TranslationConfig.builder()
-    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
-    .defaultLanguage("en_US") // The fallback language file to use
-    .language("fr_FR") // The primary language file to use
-    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
-    .extractLanguages(true) // Extract missing language files
-    .updateLanguages(true) // Update existing language files in translationDirectory with missing keys
+    .namespace("wordweaver:example") // The namespace of your plugin/mod (required)
+    .translationDirectory(Paths.get("languages")) // The directory bundle files will be extracted to
+    .defaultLocale("en_US") // The fallback locale
+    .locale("fr_FR") // The active locale
+    .resourcesDirectory(Paths.get("lang")) // Where original bundle files are located inside your programs resource directory
+    .extractBundles(true) // Extract missing bundle files
+    .updateBundles(true) // Update existing bundle files in translationDirectory with missing keys
     .componentConverter(text -> Component.text(text)) // Any Function<String, Component> that converts strings to components
     .build();
 
@@ -49,10 +51,10 @@ Translation.initialize(config);
 ### Using Translations
 
 ```java
-// Get a string from the active language
+// Get a string from the active locale
 String message = Translation.of("messages.welcome");
 
-// Get a string with a fallback if the key doesn't exist in either the selected lang or fallback/default lang
+// Get a string with a fallback if the key doesn't exist in either the selected locale or fallback/default locale
 String greeting = Translation.of("messages.greeting", "Hello, World!");
 
 // Get a list of strings
@@ -64,28 +66,68 @@ Component errorMessage = Translation.as("messages.error", Component.text("An err
 List<Component> helpMessages = Translation.asList("help.commands");
 ```
 
-### Changing Languages
+### Translatable Components
+
+WordWeaver registers with Adventure's [`GlobalTranslator`](https://docs.advntr.dev/localization.html), so your translations are also available as **translatable components**, rendered in each viewer's own locale. This allows your translations to have indexed (`<arg:0>`) and named (`<name>`) arguments.
+
+Given this `en_US.json`:
+
+```json filename="en_US.json"
+{
+  "messages": {
+    "welcome": "<gradient:green:aqua>Welcome, <arg:0>!</gradient>",
+    "joined": "<gray><player> joined the game</gray>"
+  }
+}
+```
+
+```java
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.translation.Argument;
+
+// Indexed arguments resolve <arg:0>, <arg:1>, ...
+audience.sendMessage(Component.translatable("messages.welcome", Component.text(name)));
+
+// Named argument -> <player> (net.kyori.adventure.text.minimessage.translation.Argument)
+audience.sendMessage(Component.translatable("messages.joined", Argument.component("player", Component.text(name))));
+
+// Or directly from any MiniMessage string via the <lang> tag
+audience.sendMessage(MiniMessage.miniMessage().deserialize("<gray>[Server]</gray> <lang:messages.welcome:'" + name + "'>"));
+```
+
+The component is rendered automatically in the player's locale, falling back to the default locale if necessary.
+
+<Callout type='info'>
+Indexed and whole array keys work here too: `Component.translatable("server.rules.1")` resolves the first element in a list, and `Component.translatable("server.rules")` resolves the whole array.
+</Callout>
+
+<Callout emoji="ⓘ" type='warning'>
+The translatable path always parses values as MiniMessage, independent of your `componentConverter`. Supply a custom MiniMessage instance (*e.g. with extra tag resolvers*) via `.miniMessage(...)` on the config builder.
+</Callout>
+
+### Changing Settings
 
 After changing settings, a reload is required to apply the changes.
 
 ```java
-// Change the currently ysed language
-Translation.setLanguage("fr_FR");
+// Change the active locale
+Translation.setLocale("fr_FR");
 
-// Change the default/fallback language
-Translation.setDefaultLanguage("en_US");
+// Change the default/fallback locale
+Translation.setDefaultLocale("en_US");
 
-// Reload to apply new language settings
+// Reload to apply new locale settings
 Translation.reload();
 
-// Get the current language
-String current = Translation.getLanguage();
+// Get the active locale
+String current = Translation.getLocaleTag();
 
-// Get the default language
-String defaultLang = Translation.getDefaultLanguage();
+// Get the default locale
+String defaultLocale = Translation.getDefaultLocaleTag();
 ```
 
-### Reloading Translation/Language Files
+### Reloading Translation Files
 
 ```java
 // Reloads all translations from disk
@@ -94,17 +136,31 @@ Translation.reload();
 
 ## Information
 
-### Translation/Language Files
+### File Formats
 
-Translation files are JSONC (*Json with comments*) files extracted to, and loaded from the specified `translationDirectory` directory. Each supported language has its own file with a name matching the language code (e.g., `en_US.json`, `fr_FR.json`).
+WordWeaver picks a parser by file extension. The core artifact includes a `.properties` parser out of the box. `.json`/`.jsonc` support is provided by the optional `wordweaver-json` or `wordweaver-json-shaded` modules (see [installation](./installation.mdx)), adding either to the classpath registers it automatically. You can also register your own format by implementing `TranslationParser` and passing it to `.parser(...)` on the config builder.
 
-Example `en_US.json`:
+Each supported locale has its own file named after the locale code (e.g. `en_US.properties`, `fr_FR.json`, `de_DE.jsonc`, `sv_SE.json`). Files are extracted to, and loaded from, the `translationDirectory`.
+
+<Callout type='info'>
+`.properties` files cannot express lists, so `ofList`/`asList` return single-element lists for them. Use a JSON module if you need lists. Cross references (`<key:other.key>`) work in every format.
+</Callout>
+
+Example `en_US.properties`:
+
+```properties
+messages.welcome=Welcome to our server!
+messages.goodbye=Goodbye, see you soon!
+messages.error=An error occurred: {0}
+```
+
+Example `en_US.json` (*requires a JSON parser module*):
 
 ```json
 {
   "messages": {
     "welcome": "Welcome to our server!",
-    "goodbye": "Goodbye, see you soon!",
+    "goodbye": "Goodbye, see you soon <player_name>!",
     "error": "An error occurred: {0}"
   },
   "server": {
@@ -121,31 +177,33 @@ Example `en_US.json`:
 
 When enabled, original translation files shipped with your program will be extracted to the `translationDirectory` on initialization.
 
-By default, the library looks for original language files inside your `/resources/lang/` directory.
+By default, the library looks for original translation files inside your `/resources/lang/` directory.
 
 ```java
 TranslationConfig config = TranslationConfig.builder()
-    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
-    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
-    .extractLanguages(true) // Defaults to true
+    .namespace("wordweaver:example") // The namespace of your plugin/mod (required)
+    .translationDirectory(Paths.get("languages")) // The directory bundle files will be extracted to
+    .resourcesDirectory(Paths.get("lang")) // Where original bundle files are located inside your programs resource directory
+    .extractBundles(true) // Defaults to true
     .build();
 ```
 
-### Adding Missing Keys To Outdated Language Files
+### Adding Missing Keys To Outdated Translation Files
 
-When enabled, on initialization, WordWeaver will try to add missing keys from original lang files to their extracted counterparts.
+When enabled, on initialization, WordWeaver will try to add missing keys from original translation files to their extracted counterparts.
 
-By default, the library looks for original language files inside your `/resources/lang/` directory.
+By default, the library looks for original translation files inside your `/resources/lang/` directory.
 
 The following specs will be followed:
-- The values of keys in the extracted file are not changed.
-- Additional keys found in the extracted file are not removed but re-added to the bottom of the file.
-- The keys in the extracted file will be re-ordered to mirror the order of entries in the original file.
+- The values of keys in the extracted file are not changed/overwritten.
+- Additional keys found in the extracted file are not removed, but reinserted.
+- For JSON files the keys are re-ordered to mirror the origin's order. For `.properties` files the missing keys are appended to the end of the file.
 
 ```java
 TranslationConfig config = TranslationConfig.builder()
-    .translationDirectory(Paths.get("languages")) // The directory language files will be extracted to
-    .resourcesDirectory(Paths.get("lang")) // Where original language files are located inside your programs resource directory
-    .updateLanguages(true) // Defaults to true
+    .namespace("wordweaver:example") // The namespace of your plugin/mod (required)
+    .translationDirectory(Paths.get("languages")) // The directory bundle files will be extracted to
+    .resourcesDirectory(Paths.get("lang")) // Where original bundle files are located inside your programs resource directory
+    .updateBundles(true) // Defaults to true
     .build();
 ```
