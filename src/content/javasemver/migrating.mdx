@@ -1,0 +1,47 @@
+import { Callout } from 'nextra/components'
+
+# Migrating
+
+## `1.X.X` To `2.X.X`
+
+Version `2.0.0` is a breaking release. The library was redesigned around `Version.parse(...)` and instance methods, and it now provides ranges, increments, coercion and diffing.
+
+<Callout type='info'>
+The version model was left unchanged. A `Version` is still `major.minor.patch-preRelease+build`. Most of the migration is renaming static comparison calls to instance methods.
+</Callout>
+
+### Parsing & creation
+
+| `1.X.X` | `2.X.X` |
+| --- | --- |
+| `Version.of("1.2.3")` | `Version.parse("1.2.3")` |
+| `Version.ofOptional("1.2.3")` | `Version.parseOptional("1.2.3")` |
+| `Version.of(1, 2, 3, ...)` | *(unchanged)* |
+
+### Comparison
+
+The static `Version.isX(a, b)` helpers were replaced by instance methods on `Version`.
+
+| `1.X.X` | `2.X.X` |
+| --- | --- |
+| `Version.isNewer(a, b)` | `a.isGreaterThan(b)` |
+| `Version.isNewerOrEqual(a, b)` | `a.isAtLeast(b)` |
+| `Version.isOlder(a, b)` | `a.isLessThan(b)` |
+| `Version.isOlderOrEqual(a, b)` | `a.isAtMost(b)` |
+| `Version.isEqual(a, b)` | `a.isEqualTo(b)` |
+
+### Accessors
+
+| `1.X.X` | `2.X.X` |
+| --- | --- |
+| `v.hasMeta()` | `v.hasBuildMetadata()` |
+| `v.getPreReleaseIdentifiers()` returns `String[]` | returns `List<String>` |
+
+`getMajor()`/`getMinor()`/`getPatch()`, `getPreRelease()`, `getBuildMetadata()`, `getVersion()`, `getVersionFull()` and `toString()` were left unchanged.
+
+### Behavioural notes
+
+- `compareTo`/precedence ignores build metadata (*per the SemVer spec*), `equals` still includes it. Use `Version.BUILD_AWARE` if you want build metadata as a deterministic tiebreak when sorting.
+- Parsing exceptions are unchecked (`VersionParseException`, `RangeParseException`, `VersionBuildException`). No changes needed to method signatures that previously caught them.
+
+Once you've updated these calls above, everything else in 2.0.0 is additive. See [Ranges](./ranges.mdx) and [Incrementing & Diffing](./increment.mdx) for some of the new capabilities.

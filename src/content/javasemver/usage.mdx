@@ -1,146 +1,170 @@
 import { Callout } from 'nextra/components'
-import { Tabs } from 'nextra/components'
 
-# Java-Semver Usage Guide
+# Working with Versions
 
-<Callout emoji="⚠️">
-This library strictly follows Semantic Versioning 2.0.0 specifications. Invalid versions will throw `VersionParseException`.
+<Callout>
+This library strictly follows the Semantic Versioning 2.0.0 specification. Invalid versions throw `VersionParseException` (an unchecked exception).
 </Callout>
 
-## Basic Version Handling
+The `Version` class is an immutable value object made up of a major, minor and patch component plus optional pre-release and build-metadata data. It implements `Comparable<Version>` and is the entry point for everything else in the library.
 
-<Callout type='info'>**Pre-release** and **build-metadata** fields default to empty strings (`""`) if not set!</Callout>
+## Parsing Versions
 
-### Parsing Versions
+<Callout type='info'>**Pre-release** and **build-metadata** fields default to empty strings (`""`) when absent.</Callout>
 
 ```java
-// Basic version
-Version v1 = Version.of("1.2.3");
+// Strict parsing, throws VersionParseException on invalid input
+Version v1 = Version.parse("1.2.3");
+Version v2 = Version.parse("1.2.3-alpha.1");
+Version v3 = Version.parse("1.2.3+build.20240101");
+Version v4 = Version.parse("1.2.3-alpha.1+build.20240101");
 
-// With pre-release
-Version v2 = Version.of("1.2.3-alpha.1");
+// Non-throwing, returns an empty Optional instead of throwing
+Optional<Version> v5 = Version.parseOptional("1.0.0");
 
-// With build metadata
-Version v3 = Version.of("1.2.3+build.20240101");
+// Validity check
+boolean ok = Version.isValid("1.2.3"); // true
 
-// Full example
-Version v4 = Version.of("1.2.3-alpha.1+build.20240101");
-
-// Optional example
-Optional<Version> v5 = Version.ofOptional("1.0.0");
+// Lenient parsing, tolerates a leading "v"/"=", surrounding whitespace and leading zeros
+Version v6 = Version.parseLoose("  =v01.02.03 "); // 1.2.3
 ```
 
-### Creating Versions Programmatically
+## Creating Versions Programmatically
 
 ```java
-// Basic version
 Version basic = Version.of(1, 2, 3);
-
-// With pre-release
 Version preRelease = Version.of(1, 2, 3, "beta");
-
-// With build metadata
-Version withBuild = Version.of(1, 2, 3, null, "build.001");
-
-// Full version
+Version withBuild = Version.of(1, 2, 3, "", "build.001");
 Version full = Version.of(1, 2, 3, "rc.1", "build.002");
 ```
 
-## Version Comparison
-
-### Comparison Methods
+Or with the builder:
 
 ```java
-Version v1 = Version.of("1.0.0");
-Version v2 = Version.of("1.0.1");
-
-Version.isNewer(v2, v1);        // true
-Version.isNewerOrEqual(v2, v1); // true
-Version.isOlder(v1, v2);        // true
-Version.isOlderOrEqual(v1, v2); // true
-Version.isEqual(v1, v2);        // false
+Version v = Version.builder()
+    .withMajor(1)
+    .withMinor(2)
+    .withPatch(3)
+    .withPreRelease("rc.1")
+    .withMeta("build.002")
+    .build();
 ```
 
-## Validation
-
-<Callout emoji="🚫" type='error'>Invalid versions throw **VersionParseException** when parsed!</Callout>
-
-### Invalid Version Patterns
-
-```java
-// Invalid examples (will throw VersionParseException)
-Version.of("1.02.03"); // Leading zeros
-Version.of("1.2.3-");  // Empty pre-release
-Version.of("1.2.3+");  // Empty build metadata
-Version.of("1.2.3-alpha..1"); // Empty identifier
-```
-
-### Error Handling
-
-```java
-try {
-    Version invalid = Version.of("1.a.3");
-} catch (VersionParseException e) {
-    System.err.println("Invalid version: " + e.getMessage());
-}
-```
-
-```java
-Optional<Version> version = Version.ofOptional("1.a.3"); // Returns empty optional instead of throwing
-```
-
-## Advanced Features
-
-### Version Formatting
-
-```java
-Version v = Version.of(1, 2, 3, "beta", "build.001");
-String str = v.toString(); // "1.2.3-beta+build.001"
-```
-
-### Standard Compliance
-
-```java
-// Strict parsing rules
-Version.of("v1.0.0");      // Valid (auto-trims 'v')
-Version.of("1.0.0-rc.1");  // Valid
-Version.of("1.0.0-01");    // Throws VersionParseException
-```
-
-## Common Patterns
-
-### Accessor Methods
+## Accessors
 
 ```java
 Version v = Version.of(2, 1, 0, "beta.2", "build.20240321");
-
-v.getVersion();  // "2.1.0"
-v.getVersionFull(); // "2.1.0-beta.2+build.20240321"
-v.toString(); // "2.1.0-beta.2+build.20240321"
 
 v.getMajor(); // 2L
 v.getMinor(); // 1L
 v.getPatch(); // 0L
 v.getPreRelease(); // "beta.2"
-v.getPreReleaseIdentifiers(); // ["beta", "2"]
+v.getPreReleaseIdentifiers(); // ["beta", "2"] (unmodifiable List<String>)
 v.getBuildMetadata(); // "build.20240321"
+
+v.hasPreRelease(); // true
+v.hasBuildMetadata(); // true
+
+v.getVersion(); // "2.1.0" (major.minor.patch only)
+v.getVersionFull(); // "2.1.0-beta.2+build.20240321"
+v.toString(); // "2.1.0-beta.2+build.20240321"
 ```
 
-### Misc
+### Pre-release helpers
 
 ```java
-Version v = Version.of("1.0.0-beta.1");
+Version v = Version.parse("1.0.0-beta.1");
 
-v.hasPreRelease() // true, checks if pre-release is empty
-v.hasMeta() // false, checks if build-metadata is empty
+v.isAlpha(); // false, pre-release contains "alpha"
+v.isBeta(); // true, pre-release contains "beta"
+v.isDev(); // false, pre-release contains "dev"/"develop"/"development"
+v.isRC(); // false, pre-release contains "rc"
+v.isSnapshot(); // false, pre-release contains "snapshot"
 
-v.isAlpha() // false, does not contain "alpha"
-v.isBeta() // true, contains "beta"
-v.isDev() // false, does not contain "dev", "develop", or "development"
-v.isRC() // false, does not contain "rc"
-v.isSnapshot() // false, does not contain "snapshot"
-
-Version.of("1.0.0-SNAPSHOT").isSnapshot(); // true, contains "snapshot"
-Version.of("2.1.0-RC.2").isRC(); // true, contains "rc"
+Version.parse("1.0.0-SNAPSHOT").isSnapshot(); // true
+Version.parse("2.1.0-RC.2").isRC(); // true
 ```
 
+## Comparing Versions
+
+<Callout type='warning'>
+Comparison follows SemVer precedence rules. Build metadata is ignored by default for precedence.
+</Callout>
+
+```java
+Version v1 = Version.parse("1.0.0");
+Version v2 = Version.parse("1.0.1");
+
+v2.isGreaterThan(v1); // true (>)
+v2.isAtLeast(v1); // true (>=)
+v1.isLessThan(v2); // true (<)
+v1.isAtMost(v2); // true (<=)
+v1.isEqualTo(v2); // false (precedence equality)
+
+v1.compareTo(v2); // negative int (Comparable)
+```
+
+<Callout type='info'>
+`isEqualTo` compares **precedence** (*ignoring build metadata*), while `equals` compares **structural equality** (including build metadata). So `1.0.0+build.1` and `1.0.0+build.2` are `isEqualTo` each other but not `equals`.
+</Callout>
+
+### Sorting
+
+`Version` is `Comparable`, and so it sorts naturally:
+
+```java
+List<Version> versions = List.of(
+    Version.parse("2.0.0"), 
+    Version.parse("1.0.0"), 
+    Version.parse("1.0.0-rc.1")
+);
+
+Collections.sort(versions); // ascending: 1.0.0-rc.1, 1.0.0, 2.0.0
+versions.sort(Comparator.reverseOrder()); // descending
+```
+
+Need build metadata as a deterministic tiebreak? Use the `Version.BUILD_AWARE` comparator:
+
+```java
+versions.sort(Version.BUILD_AWARE);
+```
+
+## Coercing & Cleaning
+
+`coerce` extracts the first version like value from an arbitrary string. `clean` normalizes a loosely formatted (but valid) version string. Both return an `Optional`.
+
+```java
+Version.coerce("v1.2"); // Optional[1.2.0]
+Version.coerce("app-1.2.3.jar"); // Optional[1.2.3]
+Version.coerce("release 4"); // Optional[4.0.0]
+Version.coerce("no version here"); // Optional.empty
+
+Version.clean("  =v1.2.3  "); // Optional["1.2.3"]
+Version.clean("not a version"); // Optional.empty
+```
+
+## Validation & Error Handling
+
+<Callout type='error'>Invalid versions throw **VersionParseException** when parsed strictly.</Callout>
+
+```java
+// All throw VersionParseException
+Version.parse("1.02.03"); // leading zeros
+Version.parse("1.2.3-"); // empty pre-release
+Version.parse("1.2.3+"); // empty build metadata
+Version.parse("1.2.3-alpha..1"); // empty identifier
+Version.parse("1.a.3"); // non-numeric component
+```
+
+```java
+try {
+    Version invalid = Version.parse("1.a.3");
+} catch (VersionParseException e) {
+    System.err.println("Invalid version: " + e.getMessage());
+}
+
+// Or avoid exceptions entirely
+Optional<Version> maybe = Version.parseOptional("1.a.3"); // Optional.empty
+```
+
+Next up, have a look at [Ranges](./ranges.mdx).

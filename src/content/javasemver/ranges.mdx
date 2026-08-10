@@ -1,0 +1,127 @@
+import { Callout } from 'nextra/components'
+
+# Ranges
+
+A `Range` describes a set (*range*) of versions. Ranges in Java-Semver use the same grammar as [Node-Semver](https://github.com/npm/node-semver#ranges), so `^1.2.3`, `~1.2`, `1.x`, `>=1.0.0 <2.0.0`, `1.2.3 - 2.3.4` and `||` all work as in Node-Semver. `Range` is immutable and implements `Predicate<Version>`.
+
+Since Java-Semver has feature parity, we recommend the NPM SemVer range syntax documentation and official tools like the [SemVer Calculator](https://semver.npmjs.com/) for testing and visualizing ranges.
+
+## Checking whether a version satisfies a range
+
+```java
+// From a version
+Version.parse("1.2.3").satisfies("^1.0.0"); // true
+Version.parse("1.2.3").satisfies(Range.parse("~1.2.0")); // true
+Version.parse("2.0.0").satisfies("^1.0.0"); // false
+
+// From a range
+final Range range = Range.parse(">=1.0.0 <2.0.0");
+range.contains(Version.parse("1.5.0")); // true
+range.test(Version.parse("1.5.0")); // true (Predicate<Version>)
+```
+
+Because `Range` is a `Predicate<Version>`, it works with Java Streams:
+
+```java
+versions.stream().filter(Range.parse("^1.0.0")).collect(Collectors.toList());
+```
+
+## Range syntax
+
+| Range | Matches | Equivalent to |
+| --- | --- | --- |
+| `1.2.3` | exactly `1.2.3` | `=1.2.3` |
+| `>1.2.3` `>=1.2.3` `<2.0.0` `<=1.2.3` | comparators | |
+| `>=1.2.3 <2.0.0` | AND, both must hold | |
+| `1.2.3 \|\| >=2.0.0` | OR, either may hold | |
+| `1.2.3 - 2.3.4` | inclusive range | `>=1.2.3 <=2.3.4` |
+| `1.x` / `1.*` / `1` | any `1.y.z` | `>=1.0.0 <2.0.0` |
+| `1.2.x` / `1.2` | any `1.2.z` | `>=1.2.0 <1.3.0` |
+| `*` / `""` | any version | |
+| `~1.2.3` | patch-level changes | `>=1.2.3 <1.3.0` |
+| `^1.2.3` | non-breaking changes | `>=1.2.3 <2.0.0` |
+| `^0.2.3` | (left-most non-zero) | `>=0.2.3 <0.3.0` |
+
+<Callout type='info'>
+Call `range.toString()` for the canonical, expanded form of any range, and `Range.isValid("...")` to test a range string without throwing. Build metadata on a comparator (e.g. `~1.2.3+build`) is accepted and ignored, since it never affects matching.
+</Callout>
+
+### Pre-releases in ranges
+
+<Callout>
+A version that carries a pre-release only satisfies a range when one of the range's comparators explicitly names that same `major.minor.patch` with a pre-release tag.
+</Callout>
+
+```java
+Version.parse("1.2.3-alpha.4").satisfies(">=1.2.3-alpha <2.0.0"); // true  (comparator names 1.2.3-alpha)
+Version.parse("1.2.3-alpha.4").satisfies(">=1.0.0 <2.0.0"); // false (no comparator names 1.2.3-*)
+```
+
+## Finding versions in a range
+
+```java
+List<Version> versions = List.of(
+    Version.parse("1.0.0"), 
+    Version.parse("1.2.0"),
+    Version.parse("1.9.0"), 
+    Version.parse("2.0.0")
+);
+
+Range.maxSatisfying(versions, "^1.0.0"); // Optional[1.9.0]
+Range.minSatisfying(versions, "^1.0.0"); // Optional[1.0.0]
+
+Range.parse("^1.2.0").minVersion(); // Optional[1.2.0], lowest version the range can match
+Range.parse(">1.2.3").minVersion(); // Optional[1.2.4]
+Range.parse(">1.2.3-alpha").minVersion(); // Optional[1.2.3-alpha.0]
+```
+
+## Comparing ranges
+
+The range algebra is exact, it reasons over version intervals rather than sampling versions.
+
+```java
+// Do two ranges overlap?
+Range.parse(">=1.0.0 <2.0.0").intersects(Range.parse("^1.5.0")); // true
+Range.parse("^1.0.0").intersects(Range.parse("^2.0.0")); // false
+
+// Is one range wholly contained in another?
+Range.parse("^1.2.0").isSubsetOf(Range.parse(">=1.0.0 <2.0.0")); // true
+Range.parse("*").isSubsetOf(Range.parse("^1.0.0")); // false
+
+// Shortest range with the same membership over a given set of versions
+Range.simplify(versions, Range.parse(">=1.0.0 <2.0.0"));
+```
+
+### A version relative to a range
+
+```java
+Version.parse("3.0.0").isAbove(Range.parse("^1.0.0")); // true, above everything the range can match
+Version.parse("0.5.0").isBelow(Range.parse("^1.0.0")); // true, below everything the range can match
+Version.parse("1.5.0").isAbove(Range.parse("^1.0.0")); // false, it's inside the range
+```
+
+## Building comparators programmatically
+
+A `Range` is an OR of AND-sets of `Constraint`s. A single `Constraint` (like `>=1.2.3`) pairs an `Operator` with a `Version`:
+
+```java
+final Constraint c = Constraint.parse(">=1.2.3");
+c.contains(Version.parse("1.5.0")); // true
+c.getOperator(); // Operator.GTE
+c.getVersion(); // 1.2.3
+
+// Or construct one directly
+Constraint eq = new Constraint(Operator.EQ, Version.parse("1.2.3"));
+```
+
+`Operator` values are `GT` (`>`), `GTE` (`>=`), `LT` (`<`), `LTE` (`<=`) and `EQ` (`=`).
+
+## Loose ranges
+
+`Range.parseLoose` tolerates loosely formatted version bounds inside a range (a leading `v`/`=`, leading zeros):
+
+```java
+Range.parseLoose(">=v1.0.0").contains(Version.parse("1.2.0")); // true
+```
+
+<Callout type='error'>An invalid range string throws `RangeParseException` (unchecked). Use `Range.parseOptional("...")` or `Range.isValid("...")` to avoid it.</Callout>

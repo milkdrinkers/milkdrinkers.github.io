@@ -1,0 +1,59 @@
+import { Callout } from 'nextra/components'
+
+# Incrementing & Diffing
+
+## Incrementing
+
+`increment(ReleaseType)` computes the next version for a given kind of release, following node-semver's `inc` semantics. Every increment returns a **new** `Version`. The original object is never modified.
+
+```java
+final Version v = Version.parse("1.2.3");
+
+v.increment(ReleaseType.MAJOR); // 2.0.0
+v.increment(ReleaseType.MINOR); // 1.3.0
+v.increment(ReleaseType.PATCH); // 1.2.4
+
+// Shortcuts
+v.nextMajor(); // 2.0.0
+v.nextMinor(); // 1.3.0
+v.nextPatch(); // 1.2.4
+```
+
+### Pre-release increments
+
+The `PRE*` release types introduce or advance a pre-release. An optional identifier seeds the pre-release tag, without one it falls back to a numeric `0`.
+
+```java
+Version.parse("1.2.3").increment(ReleaseType.PREPATCH, "alpha"); // 1.2.4-alpha.0
+Version.parse("1.2.3").increment(ReleaseType.PRERELEASE); // 1.2.4-0
+Version.parse("1.2.3-alpha.1").increment(ReleaseType.PRERELEASE, "alpha"); // 1.2.3-alpha.2
+```
+
+### Release types
+
+| `ReleaseType` | `1.2.3` becomes | Notes |
+| --- | --- | --- |
+| `MAJOR` | `2.0.0` | |
+| `MINOR` | `1.3.0` | |
+| `PATCH` | `1.2.4` | |
+| `PREMAJOR` | `2.0.0-0` | with identifier `"alpha"` → `2.0.0-alpha.0` |
+| `PREMINOR` | `1.3.0-0` | |
+| `PREPATCH` | `1.2.4-0` | |
+| `PRERELEASE` | `1.2.4-0` | on a pre-release, bumps it instead (`1.2.3-alpha.1` → `1.2.3-alpha.2`) |
+
+<Callout type='info'>
+Incrementing an existing pre-release at a `.0.0`/`.0` boundary just drops the pre-release: `2.0.0-alpha.1` incremented as `MAJOR` becomes `2.0.0`. Build metadata is never carried over to an incremented version.
+</Callout>
+
+## Diffing
+
+`difference(Version)` classifies the kind of change between two versions, returning an `Optional<ReleaseType>` (empty when the two are equal in precedence).
+
+```java
+Version.parse("1.0.0").difference(Version.parse("2.0.0")); // Optional[MAJOR]
+Version.parse("1.0.0").difference(Version.parse("1.1.0")); // Optional[MINOR]
+Version.parse("1.0.0").difference(Version.parse("1.0.1")); // Optional[PATCH]
+Version.parse("1.0.0").difference(Version.parse("2.0.0-a")); // Optional[PREMAJOR]
+Version.parse("1.0.0-a").difference(Version.parse("1.0.0-b")); // Optional[PRERELEASE]
+Version.parse("1.0.0").difference(Version.parse("1.0.0")); // Optional.empty
+```
